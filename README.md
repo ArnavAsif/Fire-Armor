@@ -157,7 +157,7 @@ Clean navigation, newsletter subscription, and brand information.
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/armory-x.git
+git clone [https://github.com/your-username/armory-x.git](https://github.com/ArnavAsif/Fire-Armor.git)
 ```
 
 Navigate into the project:
