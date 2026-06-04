@@ -1,0 +1,1464 @@
+{% comment %}
+  Section: Armory Footer
+  File: sections/armory-footer.liquid
+{% endcomment %}
+
+<style>
+/* ============================================================
+   ARMORY FOOTER – EMBEDDED CSS
+   ============================================================ */
+
+#armory-footer-{{ section.id }} {
+  --footer-accent: {{ section.settings.accent_color }};
+  --footer-accent-rgb: 0, 212, 255;
+  --footer-bg: {{ section.settings.footer_bg }};
+  --footer-font: 'Rajdhani', 'Orbitron', 'Segoe UI', system-ui, sans-serif;
+
+  position: relative;
+  width: 100%;
+  background: var(--footer-bg);
+  font-family: var(--footer-font);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ── Background grid ── */
+#armory-footer-{{ section.id }}::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.022) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Scanlines ── */
+#armory-footer-{{ section.id }}::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 3px,
+    rgba(0,212,255,0.005) 3px, rgba(0,212,255,0.005) 6px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================
+   TOP DIVIDER BAR
+   ============================================================ */
+.af-top-bar {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0,212,255,0.4) 15%,
+    var(--footer-accent) 50%,
+    rgba(0,212,255,0.4) 85%,
+    transparent 100%
+  );
+  box-shadow: 0 0 20px rgba(0,212,255,0.3);
+}
+
+/* Animated glow sweep on top bar */
+.af-top-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -30%;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: afTopBarSweep 5s ease-in-out infinite;
+}
+
+@keyframes afTopBarSweep {
+  0% { left: -30%; }
+  100% { left: 130%; }
+}
+
+/* ============================================================
+   TICKER / ANNOUNCEMENT STRIP
+   ============================================================ */
+.af-ticker {
+  position: relative;
+  z-index: 2;
+  background: rgba(0,212,255,0.05);
+  border-bottom: 1px solid rgba(0,212,255,0.1);
+  overflow: hidden;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.af-ticker__track {
+  display: flex;
+  white-space: nowrap;
+  animation: afTickerScroll 35s linear infinite;
+  gap: 0;
+}
+
+.af-ticker__track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes afTickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.af-ticker__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 40px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(0,212,255,0.6);
+}
+
+.af-ticker__sep {
+  width: 4px;
+  height: 4px;
+  background: var(--footer-accent);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px var(--footer-accent);
+}
+
+/* ============================================================
+   MAIN FOOTER BODY
+   ============================================================ */
+.af-body {
+  position: relative;
+  z-index: 2;
+  max-width: {{ section.settings.content_width }};
+  margin: 0 auto;
+  padding: 64px 32px 48px;
+  box-sizing: border-box;
+}
+
+.af-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 40px 48px;
+  align-items: start;
+}
+
+/* ============================================================
+   BRAND COLUMN
+   ============================================================ */
+.af-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Logo */
+.af-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.af-logo__icon {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.af-logo__ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--footer-accent);
+  border-radius: 3px;
+  transform: rotate(45deg);
+  animation: afLogoSpin 10s linear infinite;
+  opacity: 0.8;
+}
+
+.af-logo__ring::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 1px;
+}
+
+.af-logo__dot {
+  width: 10px;
+  height: 10px;
+  background: var(--footer-accent);
+  border-radius: 1px;
+  transform: rotate(45deg);
+  box-shadow: 0 0 14px var(--footer-accent);
+  animation: afLogoDot 2s ease-in-out infinite;
+}
+
+@keyframes afLogoSpin {
+  0% { transform: rotate(45deg); }
+  100% { transform: rotate(405deg); }
+}
+
+@keyframes afLogoDot {
+  0%, 100% { box-shadow: 0 0 14px var(--footer-accent); }
+  50% { box-shadow: 0 0 6px var(--footer-accent); }
+}
+
+.af-logo__img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.af-logo__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.af-logo__name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.af-logo__name span { color: var(--footer-accent); }
+
+.af-logo__tagline {
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: rgba(0,212,255,0.5);
+  text-transform: uppercase;
+}
+
+/* Brand description */
+.af-brand__desc {
+  font-size: 12px;
+  color: rgba(180,210,240,0.5);
+  line-height: 1.75;
+  letter-spacing: 0.04em;
+  max-width: 280px;
+}
+
+/* HUD lines */
+.af-brand__hud {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.af-brand__hud span {
+  height: 1.5px;
+  background: var(--footer-accent);
+  border-radius: 1px;
+  opacity: 0.35;
+}
+
+.af-brand__hud span:nth-child(1) { width: 36px; }
+.af-brand__hud span:nth-child(2) { width: 18px; }
+.af-brand__hud span:nth-child(3) { width: 9px; }
+
+/* Social icons */
+.af-socials {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.af-social-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,212,255,0.05);
+  border: 1px solid rgba(0,212,255,0.15);
+  border-radius: 3px;
+  color: rgba(180,210,240,0.55);
+  text-decoration: none;
+  transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+}
+
+.af-social-btn:hover {
+  color: var(--footer-accent);
+  background: rgba(0,212,255,0.1);
+  border-color: rgba(0,212,255,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,212,255,0.2);
+}
+
+/* Stats bar */
+.af-stats {
+  display: flex;
+  gap: 0;
+  background: rgba(0,212,255,0.04);
+  border: 1px solid rgba(0,212,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.af-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  border-right: 1px solid rgba(0,212,255,0.08);
+  gap: 3px;
+}
+
+.af-stat:last-child { border-right: none; }
+
+.af-stat__val {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--footer-accent);
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(0,212,255,0.4);
+}
+
+.af-stat__label {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   NAV COLUMNS
+   ============================================================ */
+.af-nav-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.af-nav-col__header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(0,212,255,0.1);
+  position: relative;
+}
+
+/* Accent line on header */
+.af-nav-col__header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 30px;
+  height: 1px;
+  background: var(--footer-accent);
+  box-shadow: 0 0 8px var(--footer-accent);
+}
+
+.af-nav-col__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+}
+
+.af-nav-col__badge-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--footer-accent);
+  box-shadow: 0 0 5px var(--footer-accent);
+  animation: afDotPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes afDotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.af-nav-col__badge-text {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: rgba(0,212,255,0.45);
+  text-transform: uppercase;
+}
+
+.af-nav-col__title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* Nav links */
+.af-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.af-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px 7px 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(180,210,240,0.55);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  padding-left: 0;
+  transition:
+    color 0.22s ease,
+    border-color 0.22s ease,
+    padding-left 0.22s ease,
+    background 0.22s ease;
+  border-radius: 0 2px 2px 0;
+  position: relative;
+}
+
+.af-nav-link::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-right: 1.5px solid rgba(0,212,255,0.3);
+  border-top: 1.5px solid rgba(0,212,255,0.3);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  transition: border-color 0.22s ease, transform 0.22s ease;
+}
+
+.af-nav-link:hover {
+  color: #ffffff;
+  border-left-color: var(--footer-accent);
+  padding-left: 10px;
+  background: rgba(0,212,255,0.04);
+}
+
+.af-nav-link:hover::before {
+  border-color: var(--footer-accent);
+  transform: rotate(45deg) scale(1.2);
+}
+
+/* ============================================================
+   NEWSLETTER COLUMN
+   ============================================================ */
+.af-newsletter {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.af-newsletter__title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.af-newsletter__desc {
+  font-size: 10px;
+  color: rgba(180,210,240,0.45);
+  line-height: 1.65;
+  letter-spacing: 0.05em;
+}
+
+.af-newsletter__form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.af-newsletter__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.af-newsletter__input-icon {
+  position: absolute;
+  left: 12px;
+  color: rgba(0,212,255,0.4);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.af-newsletter__input {
+  width: 100%;
+  background: rgba(0,212,255,0.04) !important;
+  border: 1px solid rgba(0,212,255,0.18);
+  border-radius: 2px;
+  padding: 11px 12px 11px 36px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+  font-family: var(--footer-font);
+  outline: none;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  box-sizing: border-box;
+}
+
+.af-newsletter__input::placeholder {
+  color: rgba(180,210,240,0.3);
+  letter-spacing: 0.14em;
+  font-size: 9px;
+}
+
+.af-newsletter__input:focus {
+  border-color: rgba(0,212,255,0.5);
+  background: rgba(0,212,255,0.07);
+  box-shadow: 0 0 16px rgba(0,212,255,0.1);
+}
+
+.af-newsletter__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 20px;
+  background: transparent;
+  border: 1.5px solid var(--footer-accent);
+  color: var(--footer-accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: var(--footer-font);
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s ease, box-shadow 0.3s ease;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.af-newsletter__btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--footer-accent);
+  transform: translateX(-101%);
+  transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
+  z-index: 0;
+}
+
+.af-newsletter__btn:hover::before { transform: translateX(0); }
+.af-newsletter__btn:hover {
+  color: #050b15;
+  box-shadow: 0 0 24px rgba(0,212,255,0.4);
+}
+
+.af-newsletter__btn span { position: relative; z-index: 1; display: flex; align-items: center; gap: 6px; }
+
+.af-newsletter__success {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(0,255,136,0.06);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #00ff88;
+  text-transform: uppercase;
+}
+
+.af-newsletter__success.is-visible { display: flex; }
+
+.af-newsletter__success-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #00ff88;
+  box-shadow: 0 0 8px #00ff88;
+  flex-shrink: 0;
+}
+
+/* Trust badges */
+.af-trust {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.af-trust__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(180,210,240,0.4);
+  text-transform: uppercase;
+}
+
+.af-trust__icon {
+  color: rgba(0,212,255,0.4);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   BOTTOM DIVIDER
+   ============================================================ */
+.af-bottom-divider {
+  position: relative;
+  z-index: 2;
+  max-width: {{ section.settings.content_width }};
+  margin: 0 auto;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+
+.af-bottom-divider__line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0,212,255,0.3) 20%,
+    rgba(0,212,255,0.5) 50%,
+    rgba(0,212,255,0.3) 80%,
+    transparent 100%
+  );
+  position: relative;
+}
+
+/* Center diamond */
+.af-bottom-divider__line::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 6px;
+  height: 6px;
+  background: var(--footer-accent);
+  box-shadow: 0 0 10px var(--footer-accent);
+}
+
+/* ============================================================
+   BOTTOM BAR
+   ============================================================ */
+.af-bottom {
+  position: relative;
+  z-index: 2;
+  max-width: {{ section.settings.content_width }};
+  margin: 0 auto;
+  padding: 20px 32px 28px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.af-bottom__left {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.af-copyright {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: rgba(180,210,240,0.35);
+  text-transform: uppercase;
+}
+
+.af-copyright span { color: rgba(0,212,255,0.5); }
+
+.af-powered {
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(180,210,240,0.2);
+  text-transform: uppercase;
+}
+
+/* Bottom nav links */
+.af-bottom__links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.af-bottom__link {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(180,210,240,0.35);
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 2px;
+  transition: color 0.22s ease, background 0.22s ease;
+}
+
+.af-bottom__link:hover {
+  color: var(--footer-accent);
+  background: rgba(0,212,255,0.06);
+}
+
+.af-bottom__link-sep {
+  color: rgba(0,212,255,0.2);
+  font-size: 9px;
+}
+
+/* System status */
+.af-bottom__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,212,255,0.04);
+  border: 1px solid rgba(0,212,255,0.1);
+  border-radius: 2px;
+  padding: 6px 12px;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+}
+
+.af-status__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #00ff88;
+  box-shadow: 0 0 6px #00ff88;
+  animation: afStatusPulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes afStatusPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #00ff88; }
+  50% { opacity: 0.4; box-shadow: 0 0 3px #00ff88; }
+}
+
+.af-status__text {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(0,255,136,0.6);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Payment icons */
+.af-payment-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.af-payment-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 3px;
+}
+
+.af-payment-icon svg {
+  height: 14px;
+  width: auto;
+  fill: rgba(255,255,255,0.5);
+}
+
+/* ============================================================
+   HUD CORNER DECORATIONS
+   ============================================================ */
+.af-hud-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.4;
+}
+
+.af-hud-corner--tl { top: 12px; left: 12px; border-top: 1.5px solid var(--footer-accent); border-left: 1.5px solid var(--footer-accent); }
+.af-hud-corner--tr { top: 12px; right: 12px; border-top: 1.5px solid var(--footer-accent); border-right: 1.5px solid var(--footer-accent); }
+.af-hud-corner--bl { bottom: 12px; left: 12px; border-bottom: 1.5px solid var(--footer-accent); border-left: 1.5px solid var(--footer-accent); }
+.af-hud-corner--br { bottom: 12px; right: 12px; border-bottom: 1.5px solid var(--footer-accent); border-right: 1.5px solid var(--footer-accent); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1100px) {
+  .af-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px 32px;
+  }
+  .af-brand { grid-column: 1 / -1; }
+  .af-brand__desc { max-width: 100%; }
+  .af-stats { max-width: 360px; }
+  .af-body { padding: 48px 24px 40px; }
+}
+
+@media (max-width: 768px) {
+  .af-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 24px;
+  }
+  .af-body { padding: 40px 20px 36px; }
+  .af-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px 24px;
+  }
+  .af-bottom__links { order: 2; }
+  .af-bottom__status { order: 1; }
+  .af-bottom__left { order: 3; }
+  .af-payment-icons { order: 4; }
+  .af-bottom-divider { padding: 0 20px; }
+}
+
+@media (max-width: 540px) {
+  .af-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .af-brand { grid-column: auto; }
+  .af-stats { max-width: 100%; }
+  .af-hud-corner { display: none; }
+  .af-body { padding: 32px 16px 28px; }
+  .af-bottom { padding: 16px 16px 20px; }
+  .af-bottom-divider { padding: 0 16px; }
+  .af-logo__name { font-size: 17px; }
+  .af-logo__icon { width: 36px; height: 36px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .af-logo__ring,
+  .af-logo__dot,
+  .af-ticker__track,
+  .af-top-bar::after,
+  .af-nav-col__badge-dot,
+  .af-status__dot { animation: none !important; }
+}
+
+/* Focus */
+.af-nav-link:focus-visible,
+.af-social-btn:focus-visible,
+.af-newsletter__btn:focus-visible,
+.af-bottom__link:focus-visible {
+  outline: 2px solid var(--footer-accent);
+  outline-offset: 2px;
+}
+</style>
+
+
+<footer
+  id="armory-footer-{{ section.id }}"
+  role="contentinfo"
+  aria-label="Site Footer"
+>
+
+  {%- comment -%} HUD corners {%- endcomment -%}
+  <div class="af-hud-corner af-hud-corner--tl" aria-hidden="true"></div>
+  <div class="af-hud-corner af-hud-corner--tr" aria-hidden="true"></div>
+  <div class="af-hud-corner af-hud-corner--bl" aria-hidden="true"></div>
+  <div class="af-hud-corner af-hud-corner--br" aria-hidden="true"></div>
+
+  {%- comment -%} Top glow bar {%- endcomment -%}
+  <div class="af-top-bar" aria-hidden="true"></div>
+
+  {%- comment -%} Ticker {%- endcomment -%}
+  {%- if section.settings.show_ticker and section.settings.ticker_text != blank -%}
+    <div class="af-ticker" aria-hidden="true">
+      <div class="af-ticker__track">
+        {%- assign ticker_items = section.settings.ticker_text | split: '|' -%}
+        {%- for i in (1..3) -%}
+          {%- for item in ticker_items -%}
+            <span class="af-ticker__item">
+              <span class="af-ticker__sep"></span>
+              {{ item | strip }}
+            </span>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Main Body {%- endcomment -%}
+  <div class="af-body">
+    <div class="af-grid">
+
+      {%- comment -%} ── BRAND COLUMN ── {%- endcomment -%}
+      <div class="af-brand">
+
+        {%- comment -%} Logo {%- endcomment -%}
+        <a href="{{ routes.root_url }}" class="af-logo" aria-label="{{ shop.name }}">
+          {%- if section.settings.logo != blank -%}
+            <img
+              class="af-logo__img"
+              src="{{ section.settings.logo | image_url: width: 200 }}"
+              alt="{{ shop.name }}"
+              width="120" height="40"
+              loading="lazy"
+            >
+          {%- else -%}
+            <div class="af-logo__icon" aria-hidden="true">
+              <div class="af-logo__ring"></div>
+              <div class="af-logo__dot"></div>
+            </div>
+            <div class="af-logo__text">
+              <span class="af-logo__name">
+                {{ section.settings.logo_text | default: shop.name | split: ' ' | first }}
+                {%- if section.settings.logo_accent != blank -%}
+                  <span>{{ section.settings.logo_accent }}</span>
+                {%- endif -%}
+              </span>
+              {%- if section.settings.logo_tagline != blank -%}
+                <span class="af-logo__tagline">{{ section.settings.logo_tagline }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </a>
+
+        {%- comment -%} Description {%- endcomment -%}
+        {%- if section.settings.brand_desc != blank -%}
+          <p class="af-brand__desc">{{ section.settings.brand_desc }}</p>
+        {%- endif -%}
+
+        <div class="af-brand__hud" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+
+        {%- comment -%} Stats {%- endcomment -%}
+        {%- if section.settings.show_stats -%}
+          <div class="af-stats" aria-label="Store statistics">
+            {%- if section.settings.stat_1_val != blank -%}
+              <div class="af-stat">
+                <span class="af-stat__val">{{ section.settings.stat_1_val }}</span>
+                <span class="af-stat__label">{{ section.settings.stat_1_label }}</span>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.stat_2_val != blank -%}
+              <div class="af-stat">
+                <span class="af-stat__val">{{ section.settings.stat_2_val }}</span>
+                <span class="af-stat__label">{{ section.settings.stat_2_label }}</span>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.stat_3_val != blank -%}
+              <div class="af-stat">
+                <span class="af-stat__val">{{ section.settings.stat_3_val }}</span>
+                <span class="af-stat__label">{{ section.settings.stat_3_label }}</span>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Social icons {%- endcomment -%}
+        <div class="af-socials" role="list" aria-label="Social media links">
+          {%- if section.settings.social_instagram != blank -%}
+            <a class="af-social-btn" href="{{ section.settings.social_instagram }}" target="_blank" rel="noopener" aria-label="Instagram" role="listitem">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_twitter != blank -%}
+            <a class="af-social-btn" href="{{ section.settings.social_twitter }}" target="_blank" rel="noopener" aria-label="X / Twitter" role="listitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.254 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_facebook != blank -%}
+            <a class="af-social-btn" href="{{ section.settings.social_facebook }}" target="_blank" rel="noopener" aria-label="Facebook" role="listitem">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+              </svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_youtube != blank -%}
+            <a class="af-social-btn" href="{{ section.settings.social_youtube }}" target="_blank" rel="noopener" aria-label="YouTube" role="listitem">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+                <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_tiktok != blank -%}
+            <a class="af-social-btn" href="{{ section.settings.social_tiktok }}" target="_blank" rel="noopener" aria-label="TikTok" role="listitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.69a4.85 4.85 0 0 1-1.01-.0z"/>
+              </svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_discord != blank -%}
+            <a class="af-social-btn" href="{{ section.settings.social_discord }}" target="_blank" rel="noopener" aria-label="Discord" role="listitem">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
+
+      </div>
+
+      {%- comment -%} ── NAV COLUMN 1 ── {%- endcomment -%}
+      <div class="af-nav-col">
+        <div class="af-nav-col__header">
+          <div class="af-nav-col__badge">
+            <span class="af-nav-col__badge-dot" aria-hidden="true"></span>
+            <span class="af-nav-col__badge-text">NAVIGATION</span>
+          </div>
+          <h3 class="af-nav-col__title">{{ section.settings.nav1_title | default: 'Arsenal' }}</h3>
+        </div>
+        {%- if section.settings.nav1_menu != blank -%}
+          <ul class="af-nav-list" role="list">
+            {%- for link in linklists[section.settings.nav1_menu].links -%}
+              <li role="listitem">
+                <a class="af-nav-link" href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>
+                  {{ link.title }}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} ── NAV COLUMN 2 ── {%- endcomment -%}
+      <div class="af-nav-col">
+        <div class="af-nav-col__header">
+          <div class="af-nav-col__badge">
+            <span class="af-nav-col__badge-dot" aria-hidden="true"></span>
+            <span class="af-nav-col__badge-text">SUPPORT</span>
+          </div>
+          <h3 class="af-nav-col__title">{{ section.settings.nav2_title | default: 'Command' }}</h3>
+        </div>
+        {%- if section.settings.nav2_menu != blank -%}
+          <ul class="af-nav-list" role="list">
+            {%- for link in linklists[section.settings.nav2_menu].links -%}
+              <li role="listitem">
+                <a class="af-nav-link" href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>
+                  {{ link.title }}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} ── NEWSLETTER COLUMN ── {%- endcomment -%}
+      <div class="af-nav-col">
+        <div class="af-nav-col__header">
+          <div class="af-nav-col__badge">
+            <span class="af-nav-col__badge-dot" aria-hidden="true"></span>
+            <span class="af-nav-col__badge-text">INTEL</span>
+          </div>
+          <h3 class="af-nav-col__title">{{ section.settings.newsletter_title | default: 'Get Intel' }}</h3>
+        </div>
+
+        <div class="af-newsletter">
+          {%- if section.settings.newsletter_desc != blank -%}
+            <p class="af-newsletter__desc">{{ section.settings.newsletter_desc }}</p>
+          {%- endif -%}
+
+          {%- form 'customer', id: 'af-newsletter-form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <div class="af-newsletter__form">
+              <div class="af-newsletter__input-wrap">
+                <span class="af-newsletter__input-icon" aria-hidden="true">
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="3" width="14" height="10" rx="2"/>
+                    <path d="M1 5l7 5 7-5"/>
+                  </svg>
+                </span>
+                <input
+                  class="af-newsletter__input"
+                  type="email"
+                  name="contact[email]"
+                  placeholder="ENTER EMAIL ADDRESS..."
+                  autocomplete="email"
+                  required
+                  aria-label="Email address for newsletter"
+                  id="af-email-{{ section.id }}"
+                >
+              </div>
+              <button class="af-newsletter__btn" type="submit">
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M1 7h12M9 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {{ section.settings.newsletter_btn | default: 'TRANSMIT' }}
+                </span>
+              </button>
+            </div>
+          {%- endform -%}
+
+          {%- if form.posted_successfully? -%}
+            <div class="af-newsletter__success is-visible" role="status">
+              <span class="af-newsletter__success-dot" aria-hidden="true"></span>
+              TRANSMISSION RECEIVED
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Trust badges {%- endcomment -%}
+          <div class="af-trust">
+            <div class="af-trust__item">
+              <span class="af-trust__icon" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 1L9 5l4 .6-3 2.9.7 4L7 10.4 3.3 12.5l.7-4L1 5.6 5 5z"/>
+                </svg>
+              </span>
+              NO SPAM — INTEL ONLY
+            </div>
+            <div class="af-trust__item">
+              <span class="af-trust__icon" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 1l1.9 3.9L13 5.6l-3 2.9.7 4-3.7-2-3.7 2 .7-4-3-2.9 4.1-.7z"/>
+                </svg>
+              </span>
+              UNSUBSCRIBE ANYTIME
+            </div>
+            <div class="af-trust__item">
+              <span class="af-trust__icon" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="6" width="10" height="7" rx="1"/>
+                  <path d="M4 6V4a3 3 0 0 1 6 0v2"/>
+                </svg>
+              </span>
+              ENCRYPTED & SECURE
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {%- comment -%} Bottom divider {%- endcomment -%}
+  <div class="af-bottom-divider" aria-hidden="true">
+    <div class="af-bottom-divider__line"></div>
+  </div>
+
+  {%- comment -%} Bottom bar {%- endcomment -%}
+  <div class="af-bottom">
+
+    <div class="af-bottom__left">
+      <p class="af-copyright">
+        &copy; {{ 'now' | date: '%Y' }}
+        <span>{{ shop.name | upcase }}</span>
+        — ALL RIGHTS RESERVED
+      </p>
+      <p class="af-powered">POWERED BY SHOPIFY // ARMORY THEME</p>
+    </div>
+
+    {%- comment -%} Bottom nav links {%- endcomment -%}
+    {%- if section.settings.bottom_menu != blank -%}
+      <nav class="af-bottom__links" aria-label="Legal links">
+        {%- for link in linklists[section.settings.bottom_menu].links -%}
+          <a class="af-bottom__link" href="{{ link.url }}">{{ link.title }}</a>
+          {%- unless forloop.last -%}
+            <span class="af-bottom__link-sep" aria-hidden="true">/</span>
+          {%- endunless -%}
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+
+    {%- comment -%} System status {%- endcomment -%}
+    <div class="af-bottom__status" aria-label="System operational">
+      <span class="af-status__dot" aria-hidden="true"></span>
+      <span class="af-status__text">ALL SYSTEMS OPERATIONAL</span>
+    </div>
+
+    {%- comment -%} Payment icons {%- endcomment -%}
+    {%- if section.settings.show_payment_icons -%}
+      <div class="af-payment-icons" aria-label="Accepted payment methods">
+        {%- for type in shop.enabled_payment_types -%}
+          <div class="af-payment-icon">
+            {{ type | payment_type_svg_tag }}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+
+</footer>
+
+{% schema %}
+{
+  "name": "Armory Footer",
+  "tag": "section",
+  "class": "armory-footer-section",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer Logo",
+      "info": "Leave blank to use text logo"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "ARMORY"
+    },
+    {
+      "type": "text",
+      "id": "logo_accent",
+      "label": "Logo Accent Word",
+      "default": "X"
+    },
+    {
+      "type": "text",
+      "id": "logo_tagline",
+      "label": "Logo Tagline",
+      "default": "ADVANCED WEAPONS DIVISION"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_desc",
+      "label": "Brand Description",
+      "default": "Next-generation armory for elite operators. Every weapon engineered for precision, power, and peak performance in the field."
+    },
+    {
+      "type": "header",
+      "content": "Store Stats"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Show Stats Bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "stat_1_val",
+      "label": "Stat 1 Value",
+      "default": "2K+"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Stat 1 Label",
+      "default": "PRODUCTS"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_val",
+      "label": "Stat 2 Value",
+      "default": "50K+"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Stat 2 Label",
+      "default": "OPERATORS"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_val",
+      "label": "Stat 3 Value",
+      "default": "AAA"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_label",
+      "label": "Stat 3 Label",
+      "default": "GRADE"
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "social_twitter",
+      "label": "X / Twitter URL"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "url",
+      "id": "social_tiktok",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "social_discord",
+      "label": "Discord URL"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Column 1"
+    },
+    {
+      "type": "text",
+      "id": "nav1_title",
+      "label": "Column Title",
+      "default": "Arsenal"
+    },
+    {
+      "type": "link_list",
+      "id": "nav1_menu",
+      "label": "Navigation Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Column 2"
+    },
+    {
+      "type": "text",
+      "id": "nav2_title",
+      "label": "Column Title",
+      "default": "Command"
+    },
+    {
+      "type": "link_list",
+      "id": "nav2_menu",
+      "label": "Navigation Menu",
+      "default": "footer"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Newsletter Title",
+      "default": "Get Intel"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_desc",
+      "label": "Newsletter Description",
+      "default": "Receive classified intel on new weapons, exclusive drops, and tactical updates."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_btn",
+      "label": "Button Text",
+      "default": "TRANSMIT"
+    },
+    {
+      "type": "header",
+      "content": "Ticker"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ticker",
+      "label": "Show Ticker Strip",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "ticker_text",
+      "label": "Ticker Text (separate with |)",
+      "default": "FREE SHIPPING OVER $100 | CLASSIFIED: NEW DROPS WEEKLY | ENCRYPTED CHECKOUT | OPERATORS WORLDWIDE | AAA GRADE ARSENAL | JOIN THE DISCORD"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Bar"
+    },
+    {
+      "type": "link_list",
+      "id": "bottom_menu",
+      "label": "Legal / Bottom Links Menu",
+      "default": "footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show Payment Icons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Visual Style"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#00d4ff"
+    },
+    {
+      "type": "color",
+      "id": "footer_bg",
+      "label": "Footer Background",
+      "default": "#040a13"
+    },
+    {
+      "type": "text",
+      "id": "content_width",
+      "label": "Content Max Width",
+      "default": "1440px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Armory Footer"
+    }
+  ]
+}
+{% endschema %}

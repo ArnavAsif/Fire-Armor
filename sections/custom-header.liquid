@@ -1,0 +1,1988 @@
+{% comment %}
+  Section: Futuristic Armory Header
+  File: sections/armory-header.liquid
+{% endcomment %}
+
+<style>
+  /* ============================================================
+     ARMORY HEADER – EMBEDDED CSS
+     ============================================================ */
+
+  :root {
+    --header-accent: {{ section.settings.accent_color }};
+    --header-accent-rgb: 0, 212, 255;
+    --header-height-desktop: {{ section.settings.header_height }}px;
+    --header-height-mobile: 60px;
+    --header-bg: rgba(5, 11, 21, {{ section.settings.header_opacity | divided_by: 100.0 }});
+    --header-border: rgba(0, 212, 255, 0.15);
+    --header-font: 'Rajdhani', 'Orbitron', 'Segoe UI', system-ui, sans-serif;
+  }
+
+  body { padding-top: var(--header-height-desktop); }
+  @media (max-width: 768px) { body { padding-top: var(--header-height-mobile); } }
+
+  /* ============================================================
+     HEADER WRAPPER
+     ============================================================ */
+  .armory-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 9999;
+    height: var(--header-height-desktop);
+    font-family: var(--header-font);
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+    will-change: background, box-shadow;
+  }
+
+  .armory-header.is-scrolled {
+    background: rgba(5, 11, 21, 0.97) !important;
+    box-shadow: 0 1px 0 rgba(0, 212, 255, 0.2), 0 8px 40px rgba(0,0,0,0.6);
+  }
+
+  .armory-header__bg {
+    position: absolute; inset: 0;
+    background: var(--header-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 0;
+    transition: background 0.4s ease;
+  }
+
+  .armory-header__bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,212,255,0.008) 2px, rgba(0,212,255,0.008) 4px);
+    pointer-events: none;
+  }
+
+  .armory-header__bg::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.5) 20%, rgba(0,212,255,0.8) 50%, rgba(0,212,255,0.5) 80%, transparent 100%);
+  }
+
+  .armory-header__inner {
+    position: relative; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 100%;
+    max-width: {{ section.settings.content_width }};
+    margin: 0 auto; padding: 0 32px; gap: 24px; box-sizing: border-box;
+  }
+
+  /* ── LOGO ── */
+  .armory-header__logo { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
+  .armory-logo__icon { position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .armory-logo__icon-ring { position: absolute; inset: 0; border: 1.5px solid var(--header-accent); border-radius: 2px; transform: rotate(45deg); animation: logoRingSpin 8s linear infinite; }
+  .armory-logo__icon-ring::before { content: ''; position: absolute; inset: 3px; border: 1px solid rgba(0,212,255,0.3); border-radius: 1px; }
+  .armory-logo__icon-dot { width: 8px; height: 8px; background: var(--header-accent); border-radius: 1px; transform: rotate(45deg); box-shadow: 0 0 12px var(--header-accent); animation: logoDotPulse 2s ease-in-out infinite; }
+  @keyframes logoRingSpin { 0% { transform: rotate(45deg); } 100% { transform: rotate(405deg); } }
+  @keyframes logoDotPulse { 0%, 100% { box-shadow: 0 0 12px var(--header-accent); opacity: 1; } 50% { box-shadow: 0 0 6px var(--header-accent); opacity: 0.7; } }
+  .armory-logo__img { height: 36px; width: auto; object-fit: contain; display: block; }
+  .armory-logo__text { display: flex; flex-direction: column; gap: 1px; }
+  .armory-logo__name { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; white-space: nowrap; }
+  .armory-logo__name span { color: var(--header-accent); }
+  .armory-logo__tagline { font-size: 8px; font-weight: 600; letter-spacing: 0.22em; color: rgba(0,212,255,0.6); text-transform: uppercase; line-height: 1; white-space: nowrap; }
+
+  /* ── DESKTOP NAV ── */
+  .armory-header__nav { display: flex; align-items: center; gap: 4px; flex: 1; justify-content: center; }
+  .armory-nav__item { position: relative; }
+  .armory-nav__link { display: flex; align-items: center; gap: 5px; padding: 8px 16px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(180,210,240,0.75); text-decoration: none; border-radius: 2px; position: relative; transition: color 0.25s ease, background 0.25s ease; white-space: nowrap; background: none; border: none; cursor: pointer; font-family: var(--header-font); }
+  .armory-nav__link::before { content: ''; position: absolute; bottom: 4px; left: 16px; right: 16px; height: 1px; background: var(--header-accent); transform: scaleX(0); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); transform-origin: left; }
+  .armory-nav__link:hover { color: #fff; background: rgba(0,212,255,0.06); }
+  .armory-nav__link:hover::before, .armory-nav__link.is-active::before { transform: scaleX(1); }
+  .armory-nav__link.is-active { color: var(--header-accent); }
+  .armory-nav__arrow { display: flex; align-items: center; transition: transform 0.3s ease; color: rgba(0,212,255,0.5); }
+  .armory-nav__item:hover .armory-nav__arrow { transform: rotate(180deg); color: var(--header-accent); }
+
+  .armory-dropdown { position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(-8px); min-width: 220px; background: rgba(5,11,21,0.97); border: 1px solid rgba(0,212,255,0.2); border-radius: 3px; padding: 8px; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 30px rgba(0,212,255,0.08); clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%); z-index: 100; }
+  .armory-dropdown::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, var(--header-accent), transparent); }
+  .armory-nav__item:hover .armory-dropdown, .armory-nav__item:focus-within .armory-dropdown { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+  .armory-dropdown__link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(180,210,240,0.7); text-decoration: none; border-radius: 2px; transition: color 0.2s ease, background 0.2s ease, padding-left 0.2s ease; border-left: 2px solid transparent; }
+  .armory-dropdown__link:hover { color: #fff; background: rgba(0,212,255,0.08); padding-left: 16px; border-left-color: var(--header-accent); }
+  .armory-dropdown__link-icon { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; color: var(--header-accent); opacity: 0.7; flex-shrink: 0; }
+
+  /* ── RIGHT ACTIONS ── */
+  .armory-header__actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .armory-action-btn { position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid transparent; border-radius: 2px; cursor: pointer; color: rgba(180,210,240,0.7); text-decoration: none; transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease; flex-shrink: 0; }
+  .armory-action-btn:hover { color: var(--header-accent); background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.2); }
+  .armory-action-btn__badge { position: absolute; top: 5px; right: 5px; min-width: 16px; height: 16px; background: var(--header-accent); color: #050b15; font-size: 9px; font-weight: 800; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 3px; box-shadow: 0 0 8px var(--header-accent); animation: badgeGlow 2s ease-in-out infinite; }
+  @keyframes badgeGlow { 0%, 100% { box-shadow: 0 0 8px var(--header-accent); } 50% { box-shadow: 0 0 14px var(--header-accent); } }
+
+  .armory-search-wrapper { position: relative; display: flex; align-items: center; }
+  @media (max-width: 764px){
+  .armory-search-wrapper{
+  display: none;
+  }
+  }
+  .armory-search-toggle { position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid transparent; border-radius: 2px; cursor: pointer; color: rgba(180,210,240,0.7); transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease; }
+  .armory-search-toggle:hover { color: var(--header-accent); background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.2); }
+  .armory-search-toggle.is-open { color: var(--header-accent); background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.3); }
+  .armory-search-bar { position: absolute; top: calc(100% + 10px); right: 0; width: 320px; background: rgba(5,11,21,0.98); border: 1px solid rgba(0,212,255,0.25); border-radius: 3px; padding: 8px; display: flex; align-items: center; gap: 8px; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 16px 48px rgba(0,0,0,0.6); z-index: 200; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%); }
+  .armory-search-bar::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, var(--header-accent), rgba(0,212,255,0.3), transparent); }
+  .armory-search-bar.is-open { opacity: 1; visibility: visible; transform: translateY(0); }
+  .armory-search-bar form { display: flex; align-items: center; gap: 8px; width: 100%; }
+  .armory-search-bar input[type="search"] { flex: 1; background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.15); border-radius: 2px; padding: 8px 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #fff; font-family: var(--header-font); outline: none; transition: border-color 0.25s ease, background 0.25s ease; }
+  .armory-search-bar input[type="search"]::placeholder { color: rgba(180,210,240,0.35); letter-spacing: 0.14em; font-size: 10px; }
+  .armory-search-bar input[type="search"]:focus { border-color: rgba(0,212,255,0.5); background: rgba(0,212,255,0.08); }
+  .armory-search-submit { width: 34px; height: 34px; background: var(--header-accent); border: none; border-radius: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #050b15; flex-shrink: 0; transition: box-shadow 0.25s ease, transform 0.25s ease; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); }
+  .armory-search-submit:hover { box-shadow: 0 0 16px var(--header-accent); transform: scale(1.05); }
+
+  .armory-header-cta { display: inline-flex; align-items: center; gap: 8px; padding: 9px 20px; background: transparent; border: 1.5px solid var(--header-accent); color: var(--header-accent); text-decoration: none; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; position: relative; overflow: hidden; transition: color 0.3s ease, box-shadow 0.3s ease; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); white-space: nowrap; }
+  .armory-header-cta::before { content: ''; position: absolute; inset: 0; background: var(--header-accent); transform: translateX(-101%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 0; }
+  .armory-header-cta:hover::before { transform: translateX(0); }
+  .armory-header-cta:hover { color: #050b15; box-shadow: 0 0 24px rgba(0,212,255,0.4); }
+  .armory-header-cta span { position: relative; z-index: 1; }
+
+  .armory-header__hud-tl, .armory-header__hud-tr { position: absolute; width: 12px; height: 12px; pointer-events: none; z-index: 20; }
+  .armory-header__hud-tl { top: 6px; left: 8px; border-top: 1.5px solid rgba(0,212,255,0.4); border-left: 1.5px solid rgba(0,212,255,0.4); }
+  .armory-header__hud-tr { top: 6px; right: 8px; border-top: 1.5px solid rgba(0,212,255,0.4); border-right: 1.5px solid rgba(0,212,255,0.4); }
+
+  .armory-header__ticker { position: absolute; bottom: -22px; left: 0; right: 0; height: 22px; background: rgba(0,212,255,0.06); border-bottom: 1px solid rgba(0,212,255,0.12); overflow: hidden; display: flex; align-items: center; }
+  .armory-ticker__track { display: flex; white-space: nowrap; animation: tickerMove 30s linear infinite; }
+  .armory-ticker__item { display: inline-flex; align-items: center; gap: 8px; padding: 0 32px; font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(0,212,255,0.55); }
+  .armory-ticker__dot { width: 4px; height: 4px; background: var(--header-accent); border-radius: 50%; flex-shrink: 0; }
+  @keyframes tickerMove { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* ── MOBILE TOGGLE ── */
+  .armory-menu-toggle { display: none; flex-direction: column; justify-content: center; align-items: center; width: 44px; height: 44px; background: transparent; border: 1px solid rgba(0,212,255,0.2); border-radius: 2px; cursor: pointer; gap: 5px; padding: 10px; transition: border-color 0.25s ease, background 0.25s ease; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); flex-shrink: 0; }
+  .armory-menu-toggle:hover { border-color: rgba(0,212,255,0.5); background: rgba(0,212,255,0.06); }
+  .armory-menu-toggle__bar { display: block; width: 100%; height: 1.5px; background: rgba(180,210,240,0.8); border-radius: 1px; transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease, background 0.25s ease; transform-origin: center; }
+  .armory-menu-toggle.is-open .armory-menu-toggle__bar:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background: var(--header-accent); }
+  .armory-menu-toggle.is-open .armory-menu-toggle__bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .armory-menu-toggle.is-open .armory-menu-toggle__bar:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background: var(--header-accent); }
+
+  /* ── MOBILE DRAWER ── */
+  .armory-mobile-drawer { position: fixed; top: var(--header-height-mobile); left: 0; right: 0; bottom: 0; z-index: 9998; display: flex; flex-direction: column; background: rgba(5,11,21,0.98); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; border-right: 1px solid rgba(0,212,255,0.15); }
+  .armory-mobile-drawer.is-open { transform: translateX(0); }
+  .armory-mobile-drawer::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,212,255,0.008) 3px, rgba(0,212,255,0.008) 6px); pointer-events: none; }
+  .armory-mobile-drawer::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.02) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
+  .armory-mobile-drawer__inner { position: relative; z-index: 1; padding: 24px 24px 40px; display: flex; flex-direction: column; gap: 0; height: 100%; }
+  .armory-drawer__topbar { height: 2px; background: linear-gradient(90deg, var(--header-accent), rgba(0,212,255,0.3), transparent); margin-bottom: 28px; border-radius: 1px; }
+  .armory-mobile-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .armory-mobile-nav__item { position: relative; }
+  .armory-mobile-nav__link { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(180,210,240,0.8); text-decoration: none; border: 1px solid transparent; border-radius: 3px; transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, padding-left 0.25s ease; position: relative; cursor: pointer; background: none; width: 100%; text-align: left; font-family: var(--header-font); }
+  .armory-mobile-nav__link::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 0; background: var(--header-accent); border-radius: 0 2px 2px 0; transition: height 0.25s ease; }
+  .armory-mobile-nav__link:hover, .armory-mobile-nav__link.is-active { color: #fff; background: rgba(0,212,255,0.07); border-color: rgba(0,212,255,0.15); padding-left: 20px; }
+  .armory-mobile-nav__link:hover::before, .armory-mobile-nav__link.is-active::before { height: 60%; }
+  .armory-mobile-nav__link.is-active { color: var(--header-accent); }
+  .armory-mobile-nav__chevron { color: rgba(0,212,255,0.45); transition: transform 0.3s ease, color 0.3s ease; flex-shrink: 0; }
+  .armory-mobile-nav__link.is-open .armory-mobile-nav__chevron { transform: rotate(180deg); color: var(--header-accent); }
+  .armory-mobile-submenu { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1); }
+  .armory-mobile-submenu.is-open { max-height: 400px; }
+  .armory-mobile-submenu__inner { padding: 6px 0 6px 20px; display: flex; flex-direction: column; gap: 2px; }
+  .armory-mobile-submenu__link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(160,200,230,0.65); text-decoration: none; border-radius: 2px; border-left: 2px solid rgba(0,212,255,0.12); transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, padding-left 0.2s ease; }
+  .armory-mobile-submenu__link:hover { color: #fff; background: rgba(0,212,255,0.07); border-left-color: var(--header-accent); padding-left: 18px; }
+  .armory-mobile-divider { height: 1px; background: linear-gradient(90deg, rgba(0,212,255,0.2), transparent); margin: 16px 0; }
+  .armory-mobile-search { margin-bottom: 20px; }
+  .armory-mobile-search form { display: flex; align-items: center; gap: 8px; background: rgba(0,212,255,0.04); border: 1px solid rgba(0,212,255,0.18); border-radius: 3px; padding: 4px 4px 4px 12px; }
+  .armory-mobile-search input[type="search"] { flex: 1; background: transparent; border: none; outline: none; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #fff; font-family: var(--header-font); padding: 8px 0; }
+  .armory-mobile-search input[type="search"]::placeholder { color: rgba(180,210,240,0.3); letter-spacing: 0.14em; font-size: 10px; }
+  .armory-mobile-search__btn { width: 36px; height: 36px; background: var(--header-accent); border: none; border-radius: 2px; display: flex; align-items: center; justify-content: center; color: #050b15; cursor: pointer; flex-shrink: 0; clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px)); transition: box-shadow 0.25s ease; }
+  .armory-mobile-search__btn:hover { box-shadow: 0 0 12px var(--header-accent); }
+  .armory-mobile-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 20px; border-top: 1px solid rgba(0,212,255,0.12); margin-top: auto; }
+  .armory-mobile-action-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 16px; background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.15); border-radius: 3px; color: rgba(180,210,240,0.7); text-decoration: none; cursor: pointer; flex: 1; transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); position: relative; font-family: var(--header-font); }
+  .armory-mobile-action-btn:hover { color: var(--header-accent); background: rgba(0,212,255,0.09); border-color: rgba(0,212,255,0.3); }
+  .armory-mobile-action-btn__label { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: inherit; }
+  .armory-mobile-action-btn__badge { position: absolute; top: 8px; right: 8px; min-width: 16px; height: 16px; background: var(--header-accent); color: #050b15; font-size: 9px; font-weight: 800; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 0 3px; box-shadow: 0 0 8px var(--header-accent); }
+  .armory-mobile-hud { display: flex; gap: 5px; margin-bottom: 24px; }
+  .armory-mobile-hud span { height: 1.5px; background: var(--header-accent); border-radius: 1px; opacity: 0.4; }
+  .armory-mobile-hud span:nth-child(1) { width: 30px; }
+  .armory-mobile-hud span:nth-child(2) { width: 14px; }
+  .armory-mobile-hud span:nth-child(3) { width: 7px; }
+
+  /* ── OVERLAY ── */
+  .armory-drawer-overlay { position: fixed; inset: 0; z-index: 9997; background: rgba(5,11,21,0.7); opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0.35s ease; backdrop-filter: blur(4px); }
+  .armory-drawer-overlay.is-open { opacity: 1; visibility: visible; }
+
+  {% if section.settings.show_ticker %}
+  .armory-header { height: calc(var(--header-height-desktop) + 22px); }
+  {% endif %}
+
+  /* ============================================================
+     CART DRAWER
+     ============================================================ */
+  .armory-cart-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 420px;
+    max-width: 100vw;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    background: rgba(5, 11, 21, 0.99);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    transform: translateX(100%);
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    border-left: 1px solid rgba(0, 212, 255, 0.18);
+    font-family: var(--header-font);
+    overflow: hidden;
+  }
+
+  .armory-cart-drawer.is-open {
+    transform: translateX(0);
+  }
+
+  /* Scanlines inside drawer */
+  .armory-cart-drawer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent, transparent 3px,
+      rgba(0,212,255,0.007) 3px, rgba(0,212,255,0.007) 6px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Grid overlay */
+  .armory-cart-drawer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.018) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Cart Header ── */
+  .armory-cart-drawer__header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 24px 18px;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.12);
+    flex-shrink: 0;
+  }
+
+  /* Top glow line */
+  .armory-cart-drawer__header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--header-accent), transparent);
+  }
+
+  .armory-cart-drawer__title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .armory-cart-drawer__icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,212,255,0.25);
+    border-radius: 3px;
+    background: rgba(0,212,255,0.06);
+    color: var(--header-accent);
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+    flex-shrink: 0;
+  }
+
+  .armory-cart-drawer__title-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .armory-cart-drawer__title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .armory-cart-drawer__subtitle {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: rgba(0,212,255,0.5);
+    text-transform: uppercase;
+  }
+
+  .armory-cart-drawer__count {
+    background: var(--header-accent);
+    color: #050b15;
+    font-size: 10px;
+    font-weight: 800;
+    border-radius: 10px;
+    padding: 2px 8px;
+    min-width: 22px;
+    text-align: center;
+    box-shadow: 0 0 10px var(--header-accent);
+    animation: badgeGlow 2s ease-in-out infinite;
+  }
+
+  .armory-cart-drawer__close {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(0,212,255,0.18);
+    border-radius: 2px;
+    cursor: pointer;
+    color: rgba(180,210,240,0.6);
+    transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    flex-shrink: 0;
+  }
+
+  .armory-cart-drawer__close:hover {
+    color: var(--header-accent);
+    background: rgba(0,212,255,0.08);
+    border-color: rgba(0,212,255,0.35);
+    transform: rotate(90deg);
+  }
+
+  /* ── HUD strip ── */
+  .armory-cart-drawer__hud {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 24px;
+    background: rgba(0,212,255,0.03);
+    border-bottom: 1px solid rgba(0,212,255,0.08);
+    flex-shrink: 0;
+  }
+
+  .armory-cart-hud__lines {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .armory-cart-hud__lines span {
+    height: 1.5px;
+    background: var(--header-accent);
+    border-radius: 1px;
+    opacity: 0.4;
+  }
+
+  .armory-cart-hud__lines span:nth-child(1) { width: 20px; }
+  .armory-cart-hud__lines span:nth-child(2) { width: 10px; }
+  .armory-cart-hud__lines span:nth-child(3) { width: 5px; }
+
+  .armory-cart-hud__status {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: rgba(0,212,255,0.45);
+    text-transform: uppercase;
+  }
+
+  .armory-cart-hud__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--header-accent);
+    box-shadow: 0 0 6px var(--header-accent);
+    animation: dotPulseCart 1.5s ease-in-out infinite;
+  }
+
+  @keyframes dotPulseCart {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── Cart Body (scrollable items) ── */
+  .armory-cart-drawer__body {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 24px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,212,255,0.2) transparent;
+  }
+
+  .armory-cart-drawer__body::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .armory-cart-drawer__body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .armory-cart-drawer__body::-webkit-scrollbar-thumb {
+    background: rgba(0,212,255,0.25);
+    border-radius: 2px;
+  }
+
+  /* Empty State */
+  .armory-cart-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 60px 24px;
+    text-align: center;
+  }
+
+  .armory-cart-empty__icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 4px;
+    color: rgba(0,212,255,0.35);
+    background: rgba(0,212,255,0.04);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+
+  .armory-cart-empty__title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+  }
+
+  .armory-cart-empty__text {
+    font-size: 11px;
+    color: rgba(180,210,240,0.35);
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+  }
+
+  .armory-cart-empty__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: transparent;
+    border: 1.5px solid var(--header-accent);
+    color: var(--header-accent);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+
+  .armory-cart-empty__cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--header-accent);
+    transform: translateX(-101%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    z-index: 0;
+  }
+
+  .armory-cart-empty__cta:hover::before { transform: translateX(0); }
+  .armory-cart-empty__cta:hover { color: #050b15; }
+  .armory-cart-empty__cta span { position: relative; z-index: 1; }
+
+  /* ── Cart Item ── */
+  .armory-cart-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 14px;
+    align-items: start;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(0,212,255,0.08);
+    position: relative;
+    animation: cartItemIn 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+
+  @keyframes cartItemIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .armory-cart-item:last-child {
+    border-bottom: none;
+  }
+
+  /* Item image */
+  .armory-cart-item__img-wrap {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(0,20,40,0.9), rgba(0,30,60,0.7));
+    border: 1px solid rgba(0,212,255,0.12);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    position: relative;
+  }
+
+  .armory-cart-item__img-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(0,212,255,0.06) 0%, transparent 70%);
+  }
+
+  .armory-cart-item__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 6px;
+    box-sizing: border-box;
+    filter: drop-shadow(0 2px 8px rgba(0,212,255,0.2));
+  }
+
+  /* Item info */
+  .armory-cart-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .armory-cart-item__vendor {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: rgba(0,212,255,0.5);
+    text-transform: uppercase;
+  }
+
+  .armory-cart-item__title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    text-decoration: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s ease;
+  }
+
+  .armory-cart-item__title:hover { color: var(--header-accent); }
+
+  .armory-cart-item__variant {
+    font-size: 9px;
+    color: rgba(180,210,240,0.45);
+    letter-spacing: 0.08em;
+  }
+
+  .armory-cart-item__price-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .armory-cart-item__price {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--header-accent);
+    letter-spacing: 0.04em;
+  }
+
+  .armory-cart-item__price--compare {
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
+    text-decoration: line-through;
+  }
+
+  /* Quantity control */
+  .armory-cart-item__qty {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 6px;
+    width: fit-content;
+  }
+
+  .armory-cart-item__qty-btn {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: rgba(180,210,240,0.7);
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s ease, background 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .armory-cart-item__qty-btn:hover {
+    color: var(--header-accent);
+    background: rgba(0,212,255,0.1);
+  }
+
+  .armory-cart-item__qty-val {
+    min-width: 28px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.06em;
+    border-left: 1px solid rgba(0,212,255,0.12);
+    border-right: 1px solid rgba(0,212,255,0.12);
+  }
+
+  /* Remove button */
+  .armory-cart-item__remove {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    cursor: pointer;
+    color: rgba(255,80,80,0.4);
+    transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .armory-cart-item__remove:hover {
+    color: #ff4444;
+    background: rgba(255,68,68,0.08);
+    border-color: rgba(255,68,68,0.25);
+  }
+
+  /* Loading state */
+  .armory-cart-item.is-loading {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .armory-cart-item.is-loading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.06), transparent);
+    animation: itemLoading 1s linear infinite;
+  }
+
+  @keyframes itemLoading {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* ── Cart Footer ── */
+  .armory-cart-drawer__footer {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid rgba(0,212,255,0.15);
+    flex-shrink: 0;
+    background: rgba(5,11,21,0.8);
+  }
+
+  /* Subtotal bar */
+  .armory-cart-drawer__subtotal {
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-bottom: 1px solid rgba(0,212,255,0.08);
+  }
+
+  .armory-cart-subtotal__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .armory-cart-subtotal__label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: rgba(180,210,240,0.55);
+    text-transform: uppercase;
+  }
+
+  .armory-cart-subtotal__value {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(180,210,240,0.55);
+  }
+
+  .armory-cart-subtotal__row--total .armory-cart-subtotal__label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .armory-cart-subtotal__row--total .armory-cart-subtotal__value {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--header-accent);
+    text-shadow: 0 0 20px rgba(0,212,255,0.4);
+  }
+
+  .armory-cart-subtotal__divider {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0,212,255,0.2), transparent);
+  }
+
+  /* Note / free shipping bar */
+  .armory-cart-drawer__freeship {
+    padding: 10px 24px;
+    background: rgba(0,212,255,0.04);
+    border-bottom: 1px solid rgba(0,212,255,0.08);
+  }
+
+  .armory-cart-freeship__bar-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .armory-cart-freeship__label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: rgba(0,212,255,0.55);
+    text-transform: uppercase;
+  }
+
+  .armory-cart-freeship__bar {
+    height: 3px;
+    background: rgba(0,212,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .armory-cart-freeship__bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--header-accent), rgba(0,212,255,0.6));
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 8px var(--header-accent);
+  }
+
+  /* Action buttons */
+  .armory-cart-drawer__actions {
+    padding: 16px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .armory-cart-btn-checkout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px 24px;
+    background: var(--header-accent);
+    border: none;
+    color: #050b15;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: var(--header-font);
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+
+  .armory-cart-btn-checkout::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+  }
+
+  .armory-cart-btn-checkout:hover {
+    box-shadow: 0 0 30px rgba(0,212,255,0.5), 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(-1px);
+  }
+
+  .armory-cart-btn-checkout:hover::before {
+    transform: translateX(100%);
+  }
+
+  .armory-cart-btn-checkout:active { transform: translateY(0); }
+
+  .armory-cart-btn-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 24px;
+    background: transparent;
+    border: 1.5px solid rgba(0,212,255,0.25);
+    color: rgba(180,210,240,0.7);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: var(--header-font);
+    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+
+  .armory-cart-btn-cart:hover {
+    color: var(--header-accent);
+    border-color: rgba(0,212,255,0.5);
+    background: rgba(0,212,255,0.05);
+  }
+
+  /* Corner decorations */
+  .armory-cart-drawer__corner-tl,
+  .armory-cart-drawer__corner-br {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .armory-cart-drawer__corner-tl {
+    top: 8px;
+    left: 8px;
+    border-top: 1.5px solid rgba(0,212,255,0.3);
+    border-left: 1.5px solid rgba(0,212,255,0.3);
+  }
+
+  .armory-cart-drawer__corner-br {
+    bottom: 8px;
+    right: 8px;
+    border-bottom: 1.5px solid rgba(0,212,255,0.3);
+    border-right: 1.5px solid rgba(0,212,255,0.3);
+  }
+
+  /* ── Cart overlay (separate higher z-index) ── */
+  .armory-cart-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    background: rgba(5,11,21,0.75);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    backdrop-filter: blur(5px);
+  }
+
+  .armory-cart-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    .armory-cart-drawer { width: 100vw; }
+  }
+
+  /* ============================================================
+     RESPONSIVE HEADER
+     ============================================================ */
+  @media (max-width: 1100px) {
+    .armory-header__inner { padding: 0 20px; gap: 16px; }
+    .armory-nav__link { padding: 8px 10px; font-size: 10px; }
+    .armory-header-cta { padding: 8px 14px; font-size: 10px; }
+  }
+
+  @media (max-width: 900px) {
+    .armory-header__nav { display: none; }
+    .armory-menu-toggle { display: flex; }
+    .armory-header-cta { display: none; }
+    .armory-header { height: var(--header-height-mobile); }
+    .armory-header__hud-tl, .armory-header__hud-tr { display: none; }
+    .armory-action-btn { width: 38px; height: 38px; }
+    .armory-search-bar { width: calc(100vw - 32px); right: -8px; }
+  }
+
+  @media (max-width: 480px) {
+    .armory-header__inner { padding: 0 14px; gap: 10px; }
+    .armory-logo__tagline { display: none; }
+    .armory-logo__name { font-size: 15px; }
+    .armory-logo__icon { width: 28px; height: 28px; }
+    .armory-logo__icon-dot { width: 6px; height: 6px; }
+    .armory-search-bar { width: calc(100vw - 28px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .armory-logo__icon-ring, .armory-logo__icon-dot,
+    .armory-ticker__track, .armory-action-btn__badge,
+    .armory-cart-hud__dot { animation: none !important; }
+    .armory-mobile-drawer, .armory-search-bar,
+    .armory-dropdown, .armory-cart-drawer { transition-duration: 80ms !important; }
+  }
+
+  .armory-nav__link:focus-visible, .armory-action-btn:focus-visible,
+  .armory-menu-toggle:focus-visible, .armory-mobile-nav__link:focus-visible,
+  .armory-header-cta:focus-visible, .armory-cart-drawer__close:focus-visible,
+  .armory-cart-item__qty-btn:focus-visible, .armory-cart-item__remove:focus-visible {
+    outline: 2px solid var(--header-accent);
+    outline-offset: 2px;
+  }
+</style>
+
+<div class="armory-drawer-overlay" id="armory-drawer-overlay" aria-hidden="true"></div>
+<div class="armory-cart-overlay" id="armory-cart-overlay" aria-hidden="true"></div>
+
+<header
+  class="armory-header"
+  id="armory-main-header"
+  role="banner"
+  aria-label="Site Header"
+>
+  <div class="armory-header__bg" aria-hidden="true"></div>
+  <div class="armory-header__hud-tl" aria-hidden="true"></div>
+  <div class="armory-header__hud-tr" aria-hidden="true"></div>
+
+  <div class="armory-header__inner">
+    {%- comment -%} LOGO {%- endcomment -%}
+    <a href="{{ routes.root_url }}" class="armory-header__logo" aria-label="{{ shop.name }}">
+      {%- if section.settings.logo != blank -%}
+        <img
+          class="armory-logo__img"
+          src="{{ section.settings.logo | image_url: width: 200 }}"
+          srcset="{{ section.settings.logo | image_url: width: 100 }} 100w, {{ section.settings.logo | image_url: width: 200 }} 200w"
+          sizes="120px"
+          alt="{{ shop.name }}"
+          width="120"
+          height="40"
+          loading="eager"
+        >
+      {%- else -%}
+        <div class="armory-logo__icon" aria-hidden="true">
+          <div class="armory-logo__icon-ring"></div>
+          <div class="armory-logo__icon-dot"></div>
+        </div>
+        <div class="armory-logo__text">
+          <span class="armory-logo__name">
+            {{ section.settings.logo_text | default: shop.name | split: ' ' | first }}
+            {%- if section.settings.logo_text_accent != blank -%}
+              <span>{{ section.settings.logo_text_accent }}</span>
+            {%- endif -%}
+          </span>
+          {%- if section.settings.logo_tagline != blank -%}
+            <span class="armory-logo__tagline">{{ section.settings.logo_tagline }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </a>
+
+    {%- comment -%} DESKTOP NAV {%- endcomment -%}
+    <nav class="armory-header__nav" role="navigation" aria-label="Main Navigation">
+      {%- for link in linklists[section.settings.menu].links -%}
+        <div class="armory-nav__item">
+          {%- if link.links.size > 0 -%}
+            <button class="armory-nav__link" aria-haspopup="true" aria-expanded="false">
+              {{ link.title }}
+              <span class="armory-nav__arrow" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </button>
+            <div class="armory-dropdown" role="menu">
+              {%- for childlink in link.links -%}
+                <a
+                  class="armory-dropdown__link"
+                  href="{{ childlink.url }}"
+                  role="menuitem"
+                  {% if childlink.active %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  <span class="armory-dropdown__link-icon" aria-hidden="true">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5H8M8 5L5.5 2.5M8 5L5.5 7.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  {{ childlink.title }}
+                </a>
+              {%- endfor -%}
+            </div>
+          {%- else -%}
+            <a
+              class="armory-nav__link{% if link.active %} is-active{% endif %}"
+              href="{{ link.url }}"
+              {% if link.active %}
+                aria-current="page"
+              {% endif %}
+            >
+              {{ link.title }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </nav>
+
+    {%- comment -%} RIGHT ACTIONS {%- endcomment -%}
+    <div class="armory-header__actions">
+      {%- comment -%} Search {%- endcomment -%}
+      <div class="armory-search-wrapper">
+        <button class="armory-search-toggle" id="armory-search-toggle" aria-label="Toggle Search" aria-expanded="false">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="armory-search-bar" id="armory-search-bar" role="search">
+          <form action="{{ routes.search_url }}" method="get">
+            <input type="search" name="q" placeholder="SEARCH ARSENAL..." autocomplete="off" aria-label="Search">
+            <button class="armory-search-submit" type="submit" aria-label="Submit Search">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {%- comment -%} Account {%- endcomment -%}
+      <a class="armory-action-btn" href="{{ routes.account_url }}" aria-label="Account">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M3 17.5C3 14.462 6.134 12 10 12s7 2.462 7 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </a>
+
+      {%- comment -%} Wishlist {%- endcomment -%}
+      {%- if section.settings.show_wishlist -%}
+        <button class="armory-action-btn" aria-label="Wishlist">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <path d="M10 16.5S2.5 11.5 2.5 6.5a4 4 0 0 1 7.5-1.9A4 4 0 0 1 17.5 6.5c0 5-7.5 10-7.5 10z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {%- endif -%}
+
+      {%- comment -%} CART BUTTON – triggers custom drawer {%- endcomment -%}
+      <button
+        class="armory-action-btn"
+        id="armory-cart-trigger"
+        aria-label="Open Cart ({{ cart.item_count }} items)"
+        aria-expanded="false"
+        aria-controls="armory-cart-drawer"
+      >
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+          <path d="M2 2h2l2.4 9.6a2 2 0 0 0 1.9 1.4h6.4a2 2 0 0 0 1.9-1.4L18 6H5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="8" cy="17" r="1" fill="currentColor"/>
+          <circle cx="15" cy="17" r="1" fill="currentColor"/>
+        </svg>
+        {%- if cart.item_count > 0 -%}
+          <span class="armory-action-btn__badge" id="armory-cart-badge" aria-hidden="true">{{ cart.item_count }}</span>
+        {%- else -%}
+          <span class="armory-action-btn__badge" id="armory-cart-badge" aria-hidden="true" style="display:none">0</span>
+        {%- endif -%}
+      </button>
+
+      {%- comment -%} Desktop CTA {%- endcomment -%}
+      {%- if section.settings.cta_text != blank -%}
+        <a class="armory-header-cta" href="{{ section.settings.cta_link | default: '#' }}">
+          <span>{{ section.settings.cta_text }}</span>
+        </a>
+      {%- endif -%}
+
+      {%- comment -%} Mobile Toggle {%- endcomment -%}
+      <button
+        class="armory-menu-toggle"
+        id="armory-menu-toggle"
+        aria-label="Open Menu"
+        aria-expanded="false"
+        aria-controls="armory-mobile-drawer"
+      >
+        <span class="armory-menu-toggle__bar"></span>
+        <span class="armory-menu-toggle__bar"></span>
+        <span class="armory-menu-toggle__bar"></span>
+      </button>
+    </div>
+  </div>
+
+  {%- comment -%} Ticker {%- endcomment -%}
+  {%- if section.settings.show_ticker and section.settings.ticker_text != blank -%}
+    <div class="armory-header__ticker" aria-hidden="true">
+      <div class="armory-ticker__track">
+        {%- assign ticker_items = section.settings.ticker_text | split: '|' -%}
+        {%- for i in (1..2) -%}
+          {%- for item in ticker_items -%}
+            <span class="armory-ticker__item">
+              <span class="armory-ticker__dot"></span>
+              {{ item | strip }}
+            </span>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</header>
+
+{%- comment -%} MOBILE DRAWER {%- endcomment -%}
+<nav
+  class="armory-mobile-drawer"
+  id="armory-mobile-drawer"
+  role="navigation"
+  aria-label="Mobile Navigation"
+  aria-hidden="true"
+>
+  <div class="armory-mobile-drawer__inner">
+    <div class="armory-drawer__topbar" aria-hidden="true"></div>
+    <div class="armory-mobile-hud" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <div class="armory-mobile-search" role="search">
+      <form action="{{ routes.search_url }}" method="get">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;color:rgba(0,212,255,0.5)">
+          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input type="search" name="q" placeholder="SEARCH ARSENAL..." aria-label="Search" autocomplete="off">
+        <button class="armory-mobile-search__btn" type="submit" aria-label="Search">
+          <svg width="15" height="15" viewBox="0 0 20 20" fill="none">
+            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <div class="armory-mobile-divider" aria-hidden="true"></div>
+
+    <div class="armory-mobile-nav" role="list">
+      {%- for link in linklists[section.settings.menu].links -%}
+        <div class="armory-mobile-nav__item" role="listitem">
+          {%- if link.links.size > 0 -%}
+            <button class="armory-mobile-nav__link" aria-expanded="false" data-mobile-toggle>
+              {{ link.title }}
+              <span class="armory-mobile-nav__chevron" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M3 5L7 9L11 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </button>
+            <div class="armory-mobile-submenu" aria-hidden="true">
+              <div class="armory-mobile-submenu__inner">
+                {%- for childlink in link.links -%}
+                  <a
+                    class="armory-mobile-submenu__link"
+                    href="{{ childlink.url }}"
+                    {% if childlink.active %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    <svg
+                      width="10"
+                      height="10"
+                      viewBox="0 0 10 10"
+                      fill="none"
+                      style="color:rgba(0,212,255,0.5);flex-shrink:0"
+                    >
+                      <path d="M2 5H8M8 5L5.5 2.5M8 5L5.5 7.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ childlink.title }}
+                  </a>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- else -%}
+            <a
+              class="armory-mobile-nav__link{% if link.active %} is-active{% endif %}"
+              href="{{ link.url }}"
+              {% if link.active %}
+                aria-current="page"
+              {% endif %}
+            >
+              {{ link.title }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="armory-mobile-divider" aria-hidden="true"></div>
+
+    <div class="armory-mobile-actions">
+      <a class="armory-mobile-action-btn" href="{{ routes.account_url }}" aria-label="Account">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M3 17.5C3 14.462 6.134 12 10 12s7 2.462 7 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <span class="armory-mobile-action-btn__label">Account</span>
+      </a>
+      {%- if section.settings.show_wishlist -%}
+        <button class="armory-mobile-action-btn" aria-label="Wishlist">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 16.5S2.5 11.5 2.5 6.5a4 4 0 0 1 7.5-1.9A4 4 0 0 1 17.5 6.5c0 5-7.5 10-7.5 10z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          </svg>
+          <span class="armory-mobile-action-btn__label">Wishlist</span>
+        </button>
+      {%- endif -%}
+      <button class="armory-mobile-action-btn" id="armory-cart-trigger-mobile" aria-label="Cart">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M2 2h2l2.4 9.6a2 2 0 0 0 1.9 1.4h6.4a2 2 0 0 0 1.9-1.4L18 6H5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="8" cy="17" r="1" fill="currentColor"/>
+          <circle cx="15" cy="17" r="1" fill="currentColor"/>
+        </svg>
+        <span class="armory-mobile-action-btn__label">Cart</span>
+        {%- if cart.item_count > 0 -%}
+          <span class="armory-mobile-action-btn__badge">{{ cart.item_count }}</span>
+        {%- endif -%}
+      </button>
+    </div>
+  </div>
+</nav>
+
+{%- comment -%}
+  ═══════════════════════════════════════════════════
+      CUSTOM CART DRAWER
+  ═══════════════════════════════════════════════════
+{%- endcomment -%}
+<aside
+  class="armory-cart-drawer"
+  id="armory-cart-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Shopping Cart"
+  aria-hidden="true"
+>
+  <div class="armory-cart-drawer__corner-tl" aria-hidden="true"></div>
+  <div class="armory-cart-drawer__corner-br" aria-hidden="true"></div>
+
+  {%- comment -%} Header {%- endcomment -%}
+  <div class="armory-cart-drawer__header">
+    <div class="armory-cart-drawer__title-wrap">
+      <div class="armory-cart-drawer__icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+          <path d="M2 2h2l2.4 9.6a2 2 0 0 0 1.9 1.4h6.4a2 2 0 0 0 1.9-1.4L18 6H5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="8" cy="17" r="1" fill="currentColor"/>
+          <circle cx="15" cy="17" r="1" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="armory-cart-drawer__title-text">
+        <span class="armory-cart-drawer__title">LOADOUT</span>
+        <span class="armory-cart-drawer__subtitle">SELECTED ITEMS</span>
+      </div>
+      <span class="armory-cart-drawer__count" id="armory-cart-drawer-count">{{ cart.item_count }}</span>
+    </div>
+    <button class="armory-cart-drawer__close" id="armory-cart-close" aria-label="Close Cart">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  {%- comment -%} HUD strip {%- endcomment -%}
+  <div class="armory-cart-drawer__hud" aria-hidden="true">
+    <div class="armory-cart-hud__lines"><span></span><span></span><span></span></div>
+    <span class="armory-cart-hud__status">INVENTORY LOADED</span>
+    <div class="armory-cart-hud__dot"></div>
+  </div>
+
+  {%- comment -%} Body {%- endcomment -%}
+  <div class="armory-cart-drawer__body" id="armory-cart-body">
+    {%- if cart.item_count == 0 -%}
+      <div class="armory-cart-empty" id="armory-cart-empty">
+        <div class="armory-cart-empty__icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M4 4h4l4 16a3 3 0 0 0 3 2h10a3 3 0 0 0 3-2l2-10H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="13" cy="27" r="1.5" fill="currentColor"/>
+            <circle cx="23" cy="27" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+        <p class="armory-cart-empty__title">LOADOUT EMPTY</p>
+        <p class="armory-cart-empty__text">
+          No weapons selected.<br>
+          Add items to your arsenal.
+        </p>
+        <a class="armory-cart-empty__cta" href="{{ routes.collections_url }}">
+          <span>BROWSE ARSENAL</span>
+        </a>
+      </div>
+    {%- else -%}
+      <div id="armory-cart-items">
+        {%- for item in cart.items -%}
+          <div
+            class="armory-cart-item"
+            data-line="{{ forloop.index }}"
+            data-key="{{ item.key }}"
+          >
+            {%- comment -%} Image {%- endcomment -%}
+            <a href="{{ item.url }}" class="armory-cart-item__img-wrap" tabindex="-1" aria-hidden="true">
+              {%- if item.image != blank -%}
+                <img
+                  class="armory-cart-item__img"
+                  src="{{ item.image | image_url: width: 160 }}"
+                  alt="{{ item.title | escape }}"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                >
+              {%- endif -%}
+            </a>
+
+            {%- comment -%} Info {%- endcomment -%}
+            <div class="armory-cart-item__info">
+              {%- if item.vendor != blank -%}
+                <span class="armory-cart-item__vendor">{{ item.vendor }}</span>
+              {%- endif -%}
+              <a class="armory-cart-item__title" href="{{ item.url }}">{{ item.product.title }}</a>
+              {%- unless item.variant.title == 'Default Title' -%}
+                <span class="armory-cart-item__variant">{{ item.variant.title }}</span>
+              {%- endunless -%}
+
+              <div class="armory-cart-item__price-row">
+                <span class="armory-cart-item__price">{{ item.final_line_price | money }}</span>
+                {%- if item.original_line_price != item.final_line_price -%}
+                  <span class="armory-cart-item__price--compare">{{ item.original_line_price | money }}</span>
+                {%- endif -%}
+              </div>
+
+              <div class="armory-cart-item__qty" role="group" aria-label="Quantity for {{ item.title | escape }}">
+                <button
+                  class="armory-cart-item__qty-btn"
+                  data-action="decrease"
+                  data-key="{{ item.key }}"
+                  data-line="{{ forloop.index }}"
+                  aria-label="Decrease quantity"
+                >
+                  −
+                </button>
+                <span class="armory-cart-item__qty-val" aria-label="Quantity: {{ item.quantity }}">
+                  {{- item.quantity -}}
+                </span>
+                <button
+                  class="armory-cart-item__qty-btn"
+                  data-action="increase"
+                  data-key="{{ item.key }}"
+                  data-line="{{ forloop.index }}"
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {%- comment -%} Remove {%- endcomment -%}
+            <button
+              class="armory-cart-item__remove"
+              data-key="{{ item.key }}"
+              data-line="{{ forloop.index }}"
+              aria-label="Remove {{ item.title | escape }}"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 2L12 12M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Footer {%- endcomment -%}
+  <div
+    class="armory-cart-drawer__footer"
+    id="armory-cart-footer"
+    {% if cart.item_count == 0 %}
+      style="display:none"
+    {% endif %}
+  >
+    {%- comment -%} Free shipping bar {%- endcomment -%}
+    {%- if section.settings.free_shipping_threshold > 0 -%}
+      {%- assign threshold_cents = section.settings.free_shipping_threshold | times: 100 -%}
+      {%- assign remaining = threshold_cents | minus: cart.total_price -%}
+      {%- assign progress_pct = cart.total_price | times: 100 | divided_by: threshold_cents | at_most: 100 -%}
+      <div class="armory-cart-drawer__freeship">
+        <div class="armory-cart-freeship__bar-wrap">
+          {%- if remaining > 0 -%}
+            <span class="armory-cart-freeship__label"> {{ remaining | money }} away from FREE SHIPPING </span>
+          {%- else -%}
+            <span class="armory-cart-freeship__label">✓ FREE SHIPPING UNLOCKED</span>
+          {%- endif -%}
+          <div
+            class="armory-cart-freeship__bar"
+            role="progressbar"
+            aria-valuenow="{{ progress_pct }}"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            <div class="armory-cart-freeship__bar-fill" style="width: {{ progress_pct }}%"></div>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Subtotal {%- endcomment -%}
+    <div class="armory-cart-drawer__subtotal">
+      <div class="armory-cart-subtotal__row">
+        <span class="armory-cart-subtotal__label">Items</span>
+        <span class="armory-cart-subtotal__value" id="armory-cart-item-count">{{ cart.item_count }}</span>
+      </div>
+      <div class="armory-cart-subtotal__divider"></div>
+      <div class="armory-cart-subtotal__row armory-cart-subtotal__row--total">
+        <span class="armory-cart-subtotal__label">TOTAL</span>
+        <span class="armory-cart-subtotal__value" id="armory-cart-total">{{ cart.total_price | money }}</span>
+      </div>
+    </div>
+
+    {%- comment -%} Buttons {%- endcomment -%}
+    <div class="armory-cart-drawer__actions">
+      <a href="/checkout" class="armory-cart-btn-checkout" id="armory-checkout-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        DEPLOY TO CHECKOUT
+      </a>
+      <a href="{{ routes.cart_url }}" class="armory-cart-btn-cart"> VIEW FULL LOADOUT </a>
+    </div>
+  </div>
+</aside>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ═══════════════════════════════════════
+     HEADER CORE
+  ═══════════════════════════════════════ */
+  const header       = document.getElementById('armory-main-header');
+  const menuToggle   = document.getElementById('armory-menu-toggle');
+  const drawer       = document.getElementById('armory-mobile-drawer');
+  const overlay      = document.getElementById('armory-drawer-overlay');
+  const searchToggle = document.getElementById('armory-search-toggle');
+  const searchBar    = document.getElementById('armory-search-bar');
+  const searchInput  = searchBar?.querySelector('input');
+  const mobileToggles = drawer?.querySelectorAll('[data-mobile-toggle]');
+
+  if (!header) return;
+
+  /* Scroll */
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('is-scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  /* Mobile drawer */
+  function openDrawer() {
+    drawer.classList.add('is-open');
+    overlay.classList.add('is-open');
+    menuToggle.classList.add('is-open');
+    menuToggle.setAttribute('aria-expanded', 'true');
+    menuToggle.setAttribute('aria-label', 'Close Menu');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('is-open');
+    overlay.classList.remove('is-open');
+    menuToggle.classList.remove('is-open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open Menu');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  menuToggle?.addEventListener('click', () => {
+    drawer.classList.contains('is-open') ? closeDrawer() : openDrawer();
+  });
+  overlay?.addEventListener('click', closeDrawer);
+
+  /* Mobile accordion */
+  mobileToggles?.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const sub = btn.nextElementSibling;
+      const isOpen = sub?.classList.contains('is-open');
+      mobileToggles.forEach(b => {
+        b.classList.remove('is-open');
+        b.setAttribute('aria-expanded', 'false');
+        b.nextElementSibling?.classList.remove('is-open');
+        b.nextElementSibling?.setAttribute('aria-hidden', 'true');
+      });
+      if (!isOpen && sub) {
+        btn.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+        sub.classList.add('is-open');
+        sub.setAttribute('aria-hidden', 'false');
+      }
+    });
+  });
+
+  /* Search */
+  function openSearch() {
+    searchBar?.classList.add('is-open');
+    searchToggle?.classList.add('is-open');
+    searchToggle?.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(() => searchInput?.focus());
+  }
+  function closeSearch() {
+    searchBar?.classList.remove('is-open');
+    searchToggle?.classList.remove('is-open');
+    searchToggle?.setAttribute('aria-expanded', 'false');
+  }
+  searchToggle?.addEventListener('click', () => {
+    searchBar?.classList.contains('is-open') ? closeSearch() : openSearch();
+  });
+  document.addEventListener('click', (e) => {
+    if (searchBar?.classList.contains('is-open') && !searchBar.contains(e.target) && !searchToggle.contains(e.target)) closeSearch();
+  });
+
+  /* Resize */
+  window.matchMedia('(min-width: 901px)').addEventListener('change', (e) => {
+    if (e.matches) closeDrawer();
+  });
+
+  /* Accent RGB */
+  function hexToRgb(hex) {
+    const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return r ? `${parseInt(r[1],16)}, ${parseInt(r[2],16)}, ${parseInt(r[3],16)}` : '0, 212, 255';
+  }
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--header-accent').trim();
+  if (accent) document.documentElement.style.setProperty('--header-accent-rgb', hexToRgb(accent));
+
+  /* Escape closes everything */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeDrawer(); closeSearch(); closeCart(); }
+  });
+
+  /* ═══════════════════════════════════════
+     CART DRAWER
+  ═══════════════════════════════════════ */
+  const cartDrawer      = document.getElementById('armory-cart-drawer');
+  const cartOverlay     = document.getElementById('armory-cart-overlay');
+  const cartClose       = document.getElementById('armory-cart-close');
+  const cartTrigger     = document.getElementById('armory-cart-trigger');
+  const cartTriggerMob  = document.getElementById('armory-cart-trigger-mobile');
+  const cartBody        = document.getElementById('armory-cart-body');
+  const cartFooter      = document.getElementById('armory-cart-footer');
+  const cartBadge       = document.getElementById('armory-cart-badge');
+  const cartCount       = document.getElementById('armory-cart-drawer-count');
+  const cartTotal       = document.getElementById('armory-cart-total');
+  const cartItemCount   = document.getElementById('armory-cart-item-count');
+
+  let cartIsOpen = false;
+
+  function openCart() {
+    cartDrawer.classList.add('is-open');
+    cartOverlay.classList.add('is-open');
+    cartDrawer.setAttribute('aria-hidden', 'false');
+    cartTrigger?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    cartIsOpen = true;
+
+    /* Focus first focusable inside */
+    requestAnimationFrame(() => {
+      const focusEl = cartDrawer.querySelector('button, a, input');
+      focusEl?.focus();
+    });
+  }
+
+  function closeCart() {
+    cartDrawer.classList.remove('is-open');
+    cartOverlay.classList.remove('is-open');
+    cartDrawer.setAttribute('aria-hidden', 'true');
+    cartTrigger?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    cartIsOpen = false;
+    cartTrigger?.focus();
+  }
+
+  cartTrigger?.addEventListener('click', (e) => {
+    e.preventDefault();
+    cartIsOpen ? closeCart() : openCart();
+  });
+
+  cartTriggerMob?.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeDrawer();
+    setTimeout(openCart, 350);
+  });
+
+  cartClose?.addEventListener('click', closeCart);
+  cartOverlay?.addEventListener('click', closeCart);
+
+  /* Focus trap inside cart drawer */
+  cartDrawer?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const focusable = cartDrawer.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* ── Cart API helpers ── */
+  function formatMoney(cents) {
+    const dollars = (cents / 100).toFixed(2);
+    return window.Shopify?.currency?.active
+      ? `${dollars} ${window.Shopify.currency.active}`
+      : `$${dollars}`;
+  }
+
+  function updateBadge(count) {
+    if (!cartBadge) return;
+    cartBadge.textContent = count;
+    cartBadge.style.display = count > 0 ? 'flex' : 'none';
+  }
+
+  function updateCounts(count, total) {
+    if (cartCount)     cartCount.textContent     = count;
+    if (cartItemCount) cartItemCount.textContent = count;
+    if (cartTotal)     cartTotal.textContent     = formatMoney(total);
+    updateBadge(count);
+  }
+
+  function buildItemHTML(item, line) {
+    const hasCompare = item.original_line_price !== item.final_line_price;
+    const variantHTML = item.variant_title && item.variant_title !== 'Default Title'
+      ? `<span class="armory-cart-item__variant">${item.variant_title}</span>` : '';
+    const compareHTML = hasCompare
+      ? `<span class="armory-cart-item__price--compare">${formatMoney(item.original_line_price)}</span>` : '';
+    const vendorHTML = item.vendor
+      ? `<span class="armory-cart-item__vendor">${item.vendor}</span>` : '';
+    const imgHTML = item.image
+      ? `<img class="armory-cart-item__img" src="${item.image}" alt="${item.title}" width="80" height="80" loading="lazy">` : '';
+
+    return `
+      <div class="armory-cart-item" data-line="${line}" data-key="${item.key}">
+        <a href="${item.url}" class="armory-cart-item__img-wrap" tabindex="-1" aria-hidden="true">${imgHTML}</a>
+        <div class="armory-cart-item__info">
+          ${vendorHTML}
+          <a class="armory-cart-item__title" href="${item.url}">${item.product_title}</a>
+          ${variantHTML}
+          <div class="armory-cart-item__price-row">
+            <span class="armory-cart-item__price">${formatMoney(item.final_line_price)}</span>
+            ${compareHTML}
+          </div>
+          <div class="armory-cart-item__qty" role="group">
+            <button class="armory-cart-item__qty-btn" data-action="decrease" data-key="${item.key}" data-line="${line}" aria-label="Decrease">−</button>
+            <span class="armory-cart-item__qty-val">${item.quantity}</span>
+            <button class="armory-cart-item__qty-btn" data-action="increase" data-key="${item.key}" data-line="${line}" aria-label="Increase">+</button>
+          </div>
+        </div>
+        <button class="armory-cart-item__remove" data-key="${item.key}" data-line="${line}" aria-label="Remove ${item.title}">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 2L12 12M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>`;
+  }
+
+  function renderCart(cartData) {
+    const count = cartData.item_count;
+    const total = cartData.total_price;
+
+    updateCounts(count, total);
+
+    if (count === 0) {
+      cartBody.innerHTML = `
+        <div class="armory-cart-empty" id="armory-cart-empty">
+          <div class="armory-cart-empty__icon" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M4 4h4l4 16a3 3 0 0 0 3 2h10a3 3 0 0 0 3-2l2-10H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="13" cy="27" r="1.5" fill="currentColor"/>
+              <circle cx="23" cy="27" r="1.5" fill="currentColor"/>
+            </svg>
+          </div>
+          <p class="armory-cart-empty__title">LOADOUT EMPTY</p>
+          <p class="armory-cart-empty__text">No weapons selected.<br>Add items to your arsenal.</p>
+          <a class="armory-cart-empty__cta" href="/collections">
+            <span>BROWSE ARSENAL</span>
+          </a>
+        </div>`;
+      if (cartFooter) cartFooter.style.display = 'none';
+    } else {
+      let html = '<div id="armory-cart-items">';
+      cartData.items.forEach((item, i) => { html += buildItemHTML(item, i + 1); });
+      html += '</div>';
+      cartBody.innerHTML = html;
+      if (cartFooter) cartFooter.style.display = '';
+
+      /* Update free shipping bar if present */
+      const bar = cartFooter?.querySelector('.armory-cart-freeship__bar-fill');
+      const label = cartFooter?.querySelector('.armory-cart-freeship__label');
+      const threshold = {{ section.settings.free_shipping_threshold | times: 100 | default: 0 }};
+      if (bar && threshold > 0) {
+        const pct = Math.min(100, Math.round((total / threshold) * 100));
+        bar.style.width = pct + '%';
+        if (label) {
+          const rem = threshold - total;
+          label.textContent = rem > 0
+            ? `${formatMoney(rem)} away from FREE SHIPPING`
+            : '✓ FREE SHIPPING UNLOCKED';
+        }
+      }
+
+      bindCartEvents();
+    }
+  }
+
+  function setItemLoading(key, loading) {
+    const el = cartBody.querySelector(`[data-key="${key}"]`);
+    if (el) el.classList.toggle('is-loading', loading);
+  }
+
+  async function updateCart(key, quantity) {
+    setItemLoading(key, true);
+    try {
+      const res = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ id: key, quantity })
+      });
+      if (!res.ok) throw new Error('Cart update failed');
+      const data = await res.json();
+      renderCart(data);
+
+      /* Dispatch event for other theme components */
+      document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: data } }));
+    } catch (err) {
+      console.error('Armory cart error:', err);
+      setItemLoading(key, false);
+    }
+  }
+
+  function bindCartEvents() {
+    /* Quantity buttons */
+    cartBody.querySelectorAll('.armory-cart-item__qty-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key    = btn.dataset.key;
+        const line   = parseInt(btn.dataset.line);
+        const action = btn.dataset.action;
+        const qtyEl  = btn.closest('.armory-cart-item__qty')?.querySelector('.armory-cart-item__qty-val');
+        const currentQty = parseInt(qtyEl?.textContent || 1);
+        const newQty = action === 'increase' ? currentQty + 1 : Math.max(0, currentQty - 1);
+        updateCart(key, newQty);
+      });
+    });
+
+    /* Remove buttons */
+    cartBody.querySelectorAll('.armory-cart-item__remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        updateCart(btn.dataset.key, 0);
+      });
+    });
+  }
+
+  /* Initial bind */
+  bindCartEvents();
+
+  /* ── Listen for add-to-cart events from product forms ── */
+  document.addEventListener('submit', async (e) => {
+    const form = e.target.closest('form[action="/cart/add"]');
+    if (!form) return;
+    e.preventDefault();
+
+    const submitBtn = form.querySelector('[type="submit"]');
+    if (submitBtn) { submitBtn.disabled = true; }
+
+    try {
+      const formData = new FormData(form);
+      const res = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: formData
+      });
+      if (!res.ok) throw new Error('Add to cart failed');
+
+      /* Fetch updated cart */
+      const cartRes = await fetch('/cart.js');
+      const cartData = await cartRes.json();
+      renderCart(cartData);
+      openCart();
+
+      document.dispatchEvent(new CustomEvent('cart:item-added', { detail: { cart: cartData } }));
+    } catch (err) {
+      console.error('Armory add-to-cart error:', err);
+    } finally {
+      if (submitBtn) { submitBtn.disabled = false; }
+    }
+  });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Armory Header",
+  "tag": "section",
+  "class": "armory-header-section",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image",
+      "info": "Upload logo image. Leave blank to use text logo."
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text (if no image)",
+      "default": "ARMORY"
+    },
+    {
+      "type": "text",
+      "id": "logo_text_accent",
+      "label": "Logo Accent Word",
+      "info": "This word will be colored in accent color",
+      "default": "X"
+    },
+    {
+      "type": "text",
+      "id": "logo_tagline",
+      "label": "Logo Tagline",
+      "default": "ADVANCED WEAPONS DIVISION"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "header_height",
+      "label": "Header Height (Desktop)",
+      "min": 60,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "text",
+      "id": "content_width",
+      "label": "Content Max Width",
+      "default": "1440px"
+    },
+    {
+      "type": "header",
+      "content": "Visual Style"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#00d4ff"
+    },
+    {
+      "type": "range",
+      "id": "header_opacity",
+      "label": "Header Background Opacity",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 85
+    },
+    {
+      "type": "header",
+      "content": "Cart"
+    },
+    {
+      "type": "range",
+      "id": "free_shipping_threshold",
+      "label": "Free Shipping Threshold ($)",
+      "info": "Set to 0 to hide the free shipping bar",
+      "min": 0,
+      "max": 500,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Extra Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show Wishlist Icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ticker",
+      "label": "Show Announcement Ticker",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "ticker_text",
+      "label": "Ticker Text (separate with |)",
+      "default": "FREE SHIPPING ON ORDERS OVER $100 | NEW 2142 COLLECTION AVAILABLE NOW | LIMITED STOCK ON PLASMA SERIES | USE CODE ARMORY10 FOR 10% OFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Armory Header"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,1279 @@
+{% comment %}
+  Section: Armory Product Cards
+  File: sections/armory-product-cards.liquid
+{% endcomment %}
+
+<style>
+/* ============================================================
+   ARMORY PRODUCT CARDS – EMBEDDED CSS
+   ============================================================ */
+
+#armory-cards-{{ section.id }} {
+  --section-accent: {{ section.settings.accent_color }};
+  --section-bg: {{ section.settings.section_bg }};
+  --card-cols: {{ section.settings.columns }};
+
+  position: relative;
+  width: 100%;
+  background: var(--section-bg);
+  padding: {{ section.settings.section_padding }}px 24px;
+  font-family: 'Rajdhani', 'Orbitron', 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Background grid overlay */
+#armory-cards-{{ section.id }}::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Background scanlines */
+#armory-cards-{{ section.id }}::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,212,255,0.006) 3px,
+    rgba(0,212,255,0.006) 6px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Section Header ── */
+.apc-section-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  max-width: {{ section.settings.content_width }};
+  margin-left: auto;
+  margin-right: auto;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.apc-section-header__left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.apc-section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,212,255,0.07);
+  border: 1px solid rgba(0,212,255,0.25);
+  padding: 4px 12px 4px 8px;
+  border-radius: 2px;
+  width: fit-content;
+  position: relative;
+  overflow: hidden;
+}
+
+.apc-section-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.08), transparent);
+  animation: apcBadgeSweep 4s ease-in-out infinite;
+}
+
+@keyframes apcBadgeSweep {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+.apc-section-badge__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--section-accent);
+  box-shadow: 0 0 6px var(--section-accent);
+  animation: apcDotPulse 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes apcDotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.apc-section-badge__text {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--section-accent);
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+
+.apc-section-title {
+  font-size: clamp(26px, 3vw, 44px);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.05;
+  text-shadow: 0 0 40px rgba(0,212,255,0.2);
+}
+
+.apc-section-title span {
+  color: var(--section-accent);
+}
+
+.apc-section-subtitle {
+  font-size: 13px;
+  color: rgba(180,210,240,0.6);
+  letter-spacing: 0.06em;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.apc-section-header__hud {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.apc-section-header__hud span {
+  height: 2px;
+  background: var(--section-accent);
+  border-radius: 1px;
+  opacity: 0.4;
+}
+
+.apc-section-header__hud span:nth-child(1) { width: 40px; }
+.apc-section-header__hud span:nth-child(2) { width: 20px; }
+.apc-section-header__hud span:nth-child(3) { width: 10px; }
+
+.apc-section-count {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.apc-section-count__num {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--section-accent);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(0,212,255,0.4);
+}
+
+.apc-section-count__label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+/* ── Product Grid ── */
+.apc-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(var(--card-cols), 1fr);
+  gap: {{ section.settings.card_gap }}px;
+  max-width: {{ section.settings.content_width }};
+  margin: 0 auto;
+}
+
+/* ============================================================
+   PRODUCT CARD
+   ============================================================ */
+.apc-card {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(8, 16, 32, 0.95) 0%,
+    rgba(12, 22, 44, 0.90) 100%
+  );
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    transform 0.35s cubic-bezier(0.4,0,0.2,1),
+    box-shadow 0.35s ease;
+  will-change: transform, box-shadow;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+.apc-card.is-visible {
+  animation: apcCardReveal 0.55s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+
+@keyframes apcCardReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.apc-card:hover {
+  transform: translateY(-4px) scale(1.012);
+  box-shadow:
+    0 0 30px rgba(var(--card-accent-rgb, 0,212,255), 0.3),
+    0 16px 48px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* ── Card accent color system ── */
+.apc-card[data-accent="cyan"]   { --card-accent: #00d4ff; --card-accent-rgb: 0,212,255; }
+.apc-card[data-accent="purple"] { --card-accent: #b44dff; --card-accent-rgb: 180,77,255; }
+.apc-card[data-accent="blue"]   { --card-accent: #4d9fff; --card-accent-rgb: 77,159,255; }
+.apc-card[data-accent="orange"] { --card-accent: #ff8c1a; --card-accent-rgb: 255,140,26; }
+.apc-card[data-accent="red"]    { --card-accent: #ff3d5a; --card-accent-rgb: 255,61,90; }
+.apc-card[data-accent="green"]  { --card-accent: #00ff88; --card-accent-rgb: 0,255,136; }
+.apc-card[data-accent="gold"]   { --card-accent: #ffd700; --card-accent-rgb: 255,215,0; }
+.apc-card[data-accent="teal"]   { --card-accent: #00ffcc; --card-accent-rgb: 0,255,204; }
+
+/* ── Top accent bar ── */
+.apc-card__topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--card-accent) 0%,
+    rgba(var(--card-accent-rgb, 0,212,255), 0.4) 60%,
+    transparent 100%
+  );
+  z-index: 5;
+}
+
+/* ── Border glow ── */
+.apc-card__border {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(var(--card-accent-rgb, 0,212,255), 0.18);
+  border-radius: 4px;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  pointer-events: none;
+  z-index: 4;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+.apc-card:hover .apc-card__border {
+  border-color: rgba(var(--card-accent-rgb, 0,212,255), 0.55);
+  box-shadow:
+    inset 0 0 30px rgba(var(--card-accent-rgb, 0,212,255), 0.06),
+    0 0 20px rgba(var(--card-accent-rgb, 0,212,255), 0.15);
+}
+
+/* ── Scan line ── */
+.apc-card__scan {
+  position: absolute;
+  top: 0; left: -60%;
+  width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(var(--card-accent-rgb, 0,212,255), 0.04), transparent);
+  pointer-events: none;
+  z-index: 3;
+  animation: apcCardScan 5s linear infinite;
+  animation-play-state: paused;
+}
+
+.apc-card:hover .apc-card__scan {
+  animation-play-state: running;
+}
+
+@keyframes apcCardScan {
+  0% { left: -60%; }
+  100% { left: 160%; }
+}
+
+/* ── Corner brackets ── */
+.apc-card__corner {
+  position: absolute;
+  width: 14px; height: 14px;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.apc-card:hover .apc-card__corner { opacity: 1; }
+
+.apc-card__corner--tl { top: 6px; left: 6px; border-top: 1.5px solid var(--card-accent); border-left: 1.5px solid var(--card-accent); }
+.apc-card__corner--tr { top: 6px; right: 6px; border-top: 1.5px solid var(--card-accent); border-right: 1.5px solid var(--card-accent); }
+.apc-card__corner--bl { bottom: 6px; left: 6px; border-bottom: 1.5px solid var(--card-accent); border-left: 1.5px solid var(--card-accent); }
+.apc-card__corner--br { bottom: 6px; right: 6px; border-bottom: 1.5px solid var(--card-accent); border-right: 1.5px solid var(--card-accent); }
+
+/* ── Glow bg ── */
+.apc-card__glow-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(var(--card-accent-rgb, 0,212,255), 0.05) 0%, transparent 65%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.apc-card:hover .apc-card__glow-bg { opacity: 1; }
+
+/* ── Card Content Layout ── */
+.apc-card__content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: center;
+  padding: 22px 20px 20px;
+  min-height: 170px;
+  flex: 1;
+}
+
+/* Left: Info */
+.apc-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 16px;
+}
+
+/* Number + Type tag row */
+.apc-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.apc-card__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 20px;
+  padding: 0 6px;
+  background: rgba(var(--card-accent-rgb, 0,212,255), 0.12);
+  border: 1px solid rgba(var(--card-accent-rgb, 0,212,255), 0.35);
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--card-accent);
+  flex-shrink: 0;
+}
+
+.apc-card__type {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.apc-card__title {
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin: 0;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.5);
+}
+
+.apc-card__desc {
+  font-size: 10px;
+  color: rgba(180,210,240,0.55);
+  letter-spacing: 0.05em;
+  line-height: 1.55;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Price */
+.apc-card__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.apc-card__price {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--card-accent);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-shadow: 0 0 16px rgba(var(--card-accent-rgb, 0,212,255), 0.5);
+}
+
+.apc-card__price--compare {
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  text-decoration: line-through;
+  font-weight: 500;
+}
+
+.apc-card__badge-sale {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #050b15;
+  background: var(--card-accent);
+  padding: 2px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+/* Right: Product Image */
+.apc-card__img-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 140px;
+  overflow: visible;
+}
+
+.apc-card__img-wrap::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 30px;
+  background: radial-gradient(ellipse, rgba(var(--card-accent-rgb, 0,212,255), 0.18) 0%, transparent 70%);
+  filter: blur(10px);
+}
+
+.apc-card__img {
+  max-width: 100%;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 20px rgba(var(--card-accent-rgb, 0,212,255), 0.3));
+  transition: transform 0.45s cubic-bezier(0.4,0,0.2,1), filter 0.45s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+  position: relative;
+  z-index: 1;
+}
+
+.apc-card:hover .apc-card__img {
+  transform: scale(1.08) translateY(-4px);
+  filter: drop-shadow(0 8px 28px rgba(var(--card-accent-rgb, 0,212,255), 0.5)) brightness(1.08);
+}
+
+/* No image placeholder */
+.apc-card__img-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 120px;
+  color: rgba(var(--card-accent-rgb, 0,212,255), 0.2);
+}
+
+/* ── Card Footer ── */
+.apc-card__footer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px 18px;
+  gap: 12px;
+}
+
+.apc-card__footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 20px; right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(var(--card-accent-rgb, 0,212,255), 0.2), transparent);
+  margin-bottom: 0;
+}
+
+/* ── ADD TO CART BUTTON ── */
+.apc-atc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: transparent;
+  border: 1.5px solid var(--card-accent);
+  color: var(--card-accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: 'Rajdhani', 'Orbitron', 'Segoe UI', system-ui, sans-serif;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.apc-atc-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--card-accent);
+  transform: translateX(-101%);
+  transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
+  z-index: 0;
+}
+
+.apc-atc-btn:hover::before { transform: translateX(0); }
+.apc-atc-btn:hover {
+  color: #050b15;
+  box-shadow: 0 0 22px rgba(var(--card-accent-rgb, 0,212,255), 0.5);
+}
+
+.apc-atc-btn:active { transform: scale(0.97); }
+
+.apc-atc-btn__text,
+.apc-atc-btn__icon { position: relative; z-index: 1; display: flex; align-items: center; }
+
+/* Loading state */
+.apc-atc-btn.is-loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.apc-atc-btn.is-loading .apc-atc-btn__text::after {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: apcBtnSpin 0.7s linear infinite;
+  margin-left: 6px;
+}
+
+@keyframes apcBtnSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Success state */
+.apc-atc-btn.is-success {
+  pointer-events: none;
+}
+
+/* View product link */
+.apc-view-link {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(180,210,240,0.4);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.apc-view-link:hover { color: rgba(180,210,240,0.8); }
+
+/* Stock indicator */
+.apc-card__stock {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.apc-card__stock-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.apc-card__stock-dot--in { background: #00ff88; box-shadow: 0 0 6px #00ff88; }
+.apc-card__stock-dot--low { background: #ffd700; box-shadow: 0 0 6px #ffd700; animation: apcStockPulse 1.2s ease-in-out infinite; }
+.apc-card__stock-dot--out { background: #ff4444; box-shadow: 0 0 6px #ff4444; }
+
+@keyframes apcStockPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.apc-card__stock-label {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+}
+
+/* Target reticle bg decoration */
+.apc-card__reticle {
+  position: absolute;
+  right: 8px;
+  bottom: 35px;
+  width: 80px;
+  height: 80px;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Toast notification ── */
+.apc-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: rgba(5,11,21,0.97);
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 3px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 999999;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease;
+  opacity: 0;
+  font-family: 'Rajdhani', system-ui, sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(0,212,255,0.1);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  backdrop-filter: blur(20px);
+}
+
+.apc-toast.is-visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.apc-toast__dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #00ff88;
+  box-shadow: 0 0 8px #00ff88;
+  flex-shrink: 0;
+}
+
+.apc-toast__text {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.apc-toast__accent {
+  color: #00d4ff;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1100px) {
+  #armory-cards-{{ section.id }} { --card-cols: 2; }
+}
+
+@media (max-width: 640px) {
+  #armory-cards-{{ section.id }} {
+    --card-cols: 1;
+    padding: 40px 16px;
+  }
+
+  .apc-card__content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    min-height: unset;
+    padding: 18px 16px 10px;
+    gap: 12px;
+  }
+
+  .apc-card__img-wrap {
+    height: 100px;
+    order: -1;
+    justify-content: flex-end;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 45%;
+    height: 120px;
+  }
+
+  .apc-card__info {
+    padding-right: 48%;
+  }
+
+  .apc-card__img {
+    max-height: 110px;
+  }
+
+  .apc-card__title { font-size: 17px; }
+  .apc-card__price { font-size: 17px; }
+
+  .apc-card__footer {
+    padding: 12px 16px 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .apc-atc-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 14px;
+  }
+
+  .apc-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 28px;
+  }
+
+  .apc-section-count { display: none; }
+  .apc-section-title { font-size: 26px; }
+}
+
+@media (max-width: 380px) {
+  .apc-card__img-wrap { width: 40%; }
+  .apc-card__info { padding-right: 44%; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .apc-card__scan,
+  .apc-section-badge::before,
+  .apc-card__stock-dot--low { animation: none !important; }
+  .apc-card,
+  .apc-card__img { transition-duration: 80ms !important; }
+}
+
+/* Focus visible */
+.apc-atc-btn:focus-visible,
+.apc-view-link:focus-visible {
+  outline: 2px solid var(--card-accent, #00d4ff);
+  outline-offset: 2px;
+}
+</style>
+
+
+<div
+  id="armory-cards-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+>
+  {%- comment -%} Section Header {%- endcomment -%}
+  {%- if section.settings.show_header -%}
+    <div class="apc-section-header">
+      <div class="apc-section-header__left">
+        {%- if section.settings.badge_text != blank -%}
+          <div class="apc-section-badge">
+            <span class="apc-section-badge__dot" aria-hidden="true"></span>
+            <span class="apc-section-badge__text">{{ section.settings.badge_text }}</span>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.title != blank -%}
+          <h2 class="apc-section-title">
+            {{ section.settings.title | replace: section.settings.title_accent, '<span>' | append: section.settings.title_accent | append: '</span>' }}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.subtitle != blank -%}
+          <p class="apc-section-subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+
+        <div class="apc-section-header__hud" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      {%- assign source_collection = collections[section.settings.collection] -%}
+      {%- if source_collection != blank -%}
+        <div class="apc-section-count" aria-hidden="true">
+          <span class="apc-section-count__num">{{ source_collection.products_count | prepend: '0' | slice: -2, 2 }}</span>
+          <span class="apc-section-count__label">WEAPONS</span>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Product Grid {%- endcomment -%}
+  <div class="apc-grid" id="apc-grid-{{ section.id }}" role="list">
+
+    {%- assign accent_colors = 'cyan,purple,blue,orange,red,green,gold,teal' | split: ',' -%}
+    {%- assign card_counter = 0 -%}
+
+    {%- if section.settings.collection != blank -%}
+      {%- assign products_to_show = collections[section.settings.collection].products | limit: section.settings.products_limit -%}
+    {%- else -%}
+      {%- assign products_to_show = collections.all.products | limit: section.settings.products_limit -%}
+    {%- endif -%}
+
+    {%- for product in products_to_show -%}
+      {%- assign card_counter = card_counter | plus: 1 -%}
+      {%- assign accent_index = card_counter | minus: 1 | modulo: 8 -%}
+      {%- assign this_accent = accent_colors[accent_index] -%}
+      {%- assign display_num = card_counter | prepend: '0' | slice: -2, 2 -%}
+
+      {%- comment -%} Stock status {%- endcomment -%}
+      {%- assign available = product.available -%}
+      {%- assign total_inventory = 0 -%}
+      {%- for variant in product.variants -%}
+        {%- if variant.inventory_quantity > 0 -%}
+          {%- assign total_inventory = total_inventory | plus: variant.inventory_quantity -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if available == false -%}
+        {%- assign stock_status = 'out' -%}
+        {%- assign stock_label = 'OUT OF STOCK' -%}
+      {%- elsif total_inventory > 0 and total_inventory <= 5 -%}
+        {%- assign stock_status = 'low' -%}
+        {%- assign stock_label = 'LOW STOCK' -%}
+      {%- else -%}
+        {%- assign stock_status = 'in' -%}
+        {%- assign stock_label = 'IN STOCK' -%}
+      {%- endif -%}
+
+      {%- comment -%} Product type as "weapon type" {%- endcomment -%}
+      {%- assign weapon_type = product.type | default: 'WEAPON' | upcase -%}
+
+      <div
+        class="apc-card"
+        data-accent="{{ this_accent }}"
+        data-card-index="{{ forloop.index0 }}"
+        role="listitem"
+      >
+        {%- comment -%} Decorative layers {%- endcomment -%}
+        <div class="apc-card__topbar" aria-hidden="true"></div>
+        <div class="apc-card__border" aria-hidden="true"></div>
+        <div class="apc-card__glow-bg" aria-hidden="true"></div>
+        <div class="apc-card__scan" aria-hidden="true"></div>
+        <div class="apc-card__corner apc-card__corner--tl" aria-hidden="true"></div>
+        <div class="apc-card__corner apc-card__corner--tr" aria-hidden="true"></div>
+        <div class="apc-card__corner apc-card__corner--bl" aria-hidden="true"></div>
+        <div class="apc-card__corner apc-card__corner--br" aria-hidden="true"></div>
+
+        {%- comment -%} Reticle decoration {%- endcomment -%}
+        <svg class="apc-card__reticle" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+          <circle cx="40" cy="40" r="38" stroke="currentColor" stroke-width="1"/>
+          <circle cx="40" cy="40" r="28" stroke="currentColor" stroke-width="0.5"/>
+          <circle cx="40" cy="40" r="3" fill="currentColor"/>
+          <line x1="40" y1="2" x2="40" y2="18" stroke="currentColor" stroke-width="1"/>
+          <line x1="40" y1="62" x2="40" y2="78" stroke="currentColor" stroke-width="1"/>
+          <line x1="2" y1="40" x2="18" y2="40" stroke="currentColor" stroke-width="1"/>
+          <line x1="62" y1="40" x2="78" y2="40" stroke="currentColor" stroke-width="1"/>
+        </svg>
+
+        {%- comment -%} Main content area {%- endcomment -%}
+        <div class="apc-card__content">
+
+          {%- comment -%} Left: Info {%- endcomment -%}
+          <div class="apc-card__info">
+            <div class="apc-card__meta">
+              <span class="apc-card__num">{{ display_num }}</span>
+              <span class="apc-card__type">{{ weapon_type | truncate: 18, '' }}</span>
+            </div>
+
+            <h3 class="apc-card__title">
+              <a href="{{ product.url }}" style="color:inherit;text-decoration:none;" tabindex="-1" aria-hidden="true">
+                {{ product.title | upcase }}
+              </a>
+            </h3>
+
+            {%- if product.description != blank -%}
+              <p class="apc-card__desc">{{ product.description | strip_html | truncate: 80 }}</p>
+            {%- endif -%}
+
+            <div class="apc-card__price-row">
+              {%- if product.compare_at_price > product.price -%}
+                <span class="apc-card__price--compare">{{ product.compare_at_price | money }}</span>
+              {%- endif -%}
+              <span class="apc-card__price">{{ product.price | money }}</span>
+              {%- if product.compare_at_price > product.price -%}
+                {%- assign savings = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
+                <span class="apc-card__badge-sale">-{{ savings }}%</span>
+              {%- endif -%}
+            </div>
+          </div>
+
+          {%- comment -%} Right: Image {%- endcomment -%}
+          <div class="apc-card__img-wrap" aria-hidden="true">
+            {%- if product.featured_image != blank -%}
+              <img
+                class="apc-card__img"
+                src="{{ product.featured_image | image_url: width: 400 }}"
+                srcset="
+                  {{ product.featured_image | image_url: width: 200 }} 200w,
+                  {{ product.featured_image | image_url: width: 400 }} 400w
+                "
+                sizes="(max-width: 640px) 45vw, 20vw"
+                alt="{{ product.title | escape }}"
+                loading="lazy"
+                width="200"
+                height="130"
+                draggable="false"
+              >
+            {%- else -%}
+              <div class="apc-card__img-placeholder">
+                <svg viewBox="0 0 80 50" width="80" height="50" fill="none">
+                  <rect x="2" y="18" width="76" height="14" rx="3" fill="currentColor" opacity="0.2"/>
+                  <rect x="52" y="12" width="22" height="10" rx="2" fill="currentColor" opacity="0.3"/>
+                  <circle cx="12" cy="25" r="6" fill="currentColor" opacity="0.2"/>
+                </svg>
+              </div>
+            {%- endif -%}
+          </div>
+
+        </div>
+
+        {%- comment -%} Card Footer {%- endcomment -%}
+        <div class="apc-card__footer">
+
+          {%- comment -%} Stock status {%- endcomment -%}
+          <div class="apc-card__stock">
+            <span class="apc-card__stock-dot apc-card__stock-dot--{{ stock_status }}" aria-hidden="true"></span>
+            <span class="apc-card__stock-label">{{ stock_label }}</span>
+          </div>
+
+          {%- comment -%} View product link {%- endcomment -%}
+          <a class="apc-view-link" href="{{ product.url }}" aria-label="View {{ product.title }}">
+            DETAILS →
+          </a>
+
+          {%- comment -%} Add to Cart {%- endcomment -%}
+          {%- if product.available -%}
+            {%- assign first_variant = product.variants.first -%}
+            <button
+              class="apc-atc-btn"
+              data-variant-id="{{ first_variant.id }}"
+              data-product-title="{{ product.title | escape }}"
+              data-product-handle="{{ product.handle }}"
+              aria-label="Add {{ product.title }} to cart"
+            >
+              <span class="apc-atc-btn__icon" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 2V12M2 7H12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="apc-atc-btn__text">ADD TO CART</span>
+            </button>
+          {%- else -%}
+            <button class="apc-atc-btn" disabled style="opacity:0.35;cursor:not-allowed;pointer-events:none;">
+              <span class="apc-atc-btn__text">UNAVAILABLE</span>
+            </button>
+          {%- endif -%}
+
+        </div>
+
+      </div>
+    {%- endfor -%}
+
+    {%- if products_to_show.size == 0 -%}
+      <p style="color:rgba(180,210,240,0.5);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;grid-column:1/-1;text-align:center;padding:40px">
+        No products found. Select a collection in the Theme Editor.
+      </p>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{%- comment -%} Toast notification {%- endcomment -%}
+<div class="apc-toast" id="apc-toast" role="status" aria-live="polite" aria-atomic="true">
+  <span class="apc-toast__dot" aria-hidden="true"></span>
+  <span class="apc-toast__text" id="apc-toast-text">Item added to loadout</span>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const sectionEl = document.getElementById('armory-cards-{{ section.id }}');
+  if (!sectionEl) return;
+
+  /* ── Intersection Observer: card entrance animations ── */
+  const cards = sectionEl.querySelectorAll('.apc-card');
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const card = entry.target;
+        const index = parseInt(card.dataset.cardIndex) || 0;
+        setTimeout(() => card.classList.add('is-visible'), index * 80);
+        cardObserver.unobserve(card);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  cards.forEach(card => cardObserver.observe(card));
+
+  /* ── Toast ── */
+  const toast     = document.getElementById('apc-toast');
+  const toastText = document.getElementById('apc-toast-text');
+  let toastTimer  = null;
+
+  function showToast(productTitle) {
+    if (!toast || !toastText) return;
+    toastText.innerHTML = `<span class="apc-toast__accent">${productTitle}</span> added to loadout`;
+    toast.classList.add('is-visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 3000);
+  }
+
+  /* ── Money format helper ── */
+  function formatMoney(cents) {
+    const symbol = window.Shopify?.currency?.active || 'USD';
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: symbol }).format(cents / 100);
+  }
+
+  /* ── Open cart drawer (fires custom event header listens to) ── */
+  function openCartDrawer() {
+    /* 1 – Try direct function if header JS exposed it */
+    if (typeof window.armoryOpenCart === 'function') {
+      window.armoryOpenCart();
+      return;
+    }
+    /* 2 – Click the cart trigger button */
+    const trigger = document.getElementById('armory-cart-trigger');
+    if (trigger) {
+      const drawer = document.getElementById('armory-cart-drawer');
+      if (drawer && !drawer.classList.contains('is-open')) {
+        trigger.click();
+      }
+      return;
+    }
+    /* 3 – Dispatch global event */
+    document.dispatchEvent(new CustomEvent('armory:open-cart'));
+  }
+
+  /* ── Render updated cart into drawer ── */
+  async function refreshCartDrawer() {
+    try {
+      const res = await fetch('/cart.js');
+      if (!res.ok) return;
+      const cartData = await res.json();
+      document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cartData } }));
+    } catch (e) { /* silent */ }
+  }
+
+  /* ── Add to Cart handler ── */
+  async function handleAddToCart(btn) {
+    const variantId    = btn.dataset.variantId;
+    const productTitle = btn.dataset.productTitle || 'Item';
+    if (!variantId) return;
+
+    /* Loading state */
+    btn.classList.add('is-loading');
+    const textEl = btn.querySelector('.apc-atc-btn__text');
+    const origText = textEl?.textContent;
+    if (textEl) textEl.textContent = 'ADDING...';
+
+    try {
+      const res = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ id: variantId, quantity: 1 })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.description || 'Add to cart failed');
+      }
+
+      /* Success state */
+      btn.classList.remove('is-loading');
+      btn.classList.add('is-success');
+      if (textEl) textEl.textContent = '✓ ADDED';
+
+      /* Reset button after 2s */
+      setTimeout(() => {
+        btn.classList.remove('is-success');
+        if (textEl) textEl.textContent = origText;
+      }, 2200);
+
+      /* Show toast */
+      showToast(productTitle);
+
+      /* Refresh cart drawer contents */
+      await refreshCartDrawer();
+
+      /* Open the cart drawer */
+      setTimeout(openCartDrawer, 150);
+
+    } catch (err) {
+      console.error('APC add-to-cart error:', err);
+      btn.classList.remove('is-loading');
+      if (textEl) textEl.textContent = 'ERROR';
+      setTimeout(() => {
+        if (textEl) textEl.textContent = origText;
+      }, 2000);
+    }
+  }
+
+  /* ── Bind ATC buttons ── */
+  sectionEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.apc-atc-btn');
+    if (!btn || btn.disabled || btn.classList.contains('is-loading')) return;
+    e.preventDefault();
+    handleAddToCart(btn);
+  });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Armory Product Cards",
+  "tag": "section",
+  "class": "armory-products-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Number of Products",
+      "min": 2,
+      "max": 24,
+      "step": 2,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show Section Header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "ACTIVE INVENTORY"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "SELECT YOUR WEAPON"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Title Accent Word",
+      "info": "This word in the title will be colored",
+      "default": "WEAPON"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Advanced weapons grade armory — 2142 Collection"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns (Desktop)",
+      "options": [
+        { "value": "1", "label": "1 Column" },
+        { "value": "2", "label": "2 Columns" },
+        { "value": "3", "label": "3 Columns" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Card Gap",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section Padding (Top/Bottom)",
+      "min": 40,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "text",
+      "id": "content_width",
+      "label": "Content Max Width",
+      "default": "1440px"
+    },
+    {
+      "type": "header",
+      "content": "Visual Style"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Section Accent Color",
+      "default": "#00d4ff"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background",
+      "default": "#060d1a"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Armory Product Cards"
+    }
+  ]
+}
+{% endschema %}

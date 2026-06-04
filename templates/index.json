@@ -1,0 +1,283 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "custom_banner_NQNzGg": {
+      "type": "custom-banner",
+      "blocks": {
+        "banner_z4pKhD": {
+          "type": "banner",
+          "settings": {
+            "background_image": "shopify://shop_images/now_remove_the_model.._just_202606021213.jpg",
+            "featured_image": "shopify://shop_images/give_me_diffent_model_with_202606021224_1.png",
+            "card_thumbnail": "shopify://shop_images/Models_with_guns_standing_202606021238.jpg",
+            "title": "SR-10 STORM",
+            "subtitle": "Sniper Rifle | Long Barrel | Range: 3AM | Kinetic Accelerator",
+            "cta_text": "VIEW WEAPON",
+            "cta_link": "",
+            "accent_color": "#00ff5f"
+          }
+        },
+        "banner_TfyMrV": {
+          "type": "banner",
+          "settings": {
+            "background_image": "shopify://shop_images/now_remove_the_model.._just_202606021213.jpg",
+            "featured_image": "shopify://shop_images/give_me_diffent_model_with_202606021224.png",
+            "card_thumbnail": "shopify://shop_images/Models_with_guns_standing_202606021234.jpg",
+            "title": "AR SCARR",
+            "subtitle": "Assault Rifle | Midium Barrel | Range: 2AM | Kinetic Accelerator",
+            "cta_text": "VIEW WEAPON",
+            "cta_link": "",
+            "accent_color": "#00ff5f"
+          }
+        },
+        "banner_qwA8Lw": {
+          "type": "banner",
+          "settings": {
+            "background_image": "shopify://shop_images/now_remove_the_model.._just_202606021213.jpg",
+            "featured_image": "shopify://shop_images/give_me_diffent_model_with_202606021224_2.png",
+            "card_thumbnail": "shopify://shop_images/Models_with_guns_standing_202606021227.jpg",
+            "title": "Aug-36",
+            "subtitle": "Assault Rifle | Long Barrel | Range: 2.2AM | Kinetic Accelerator",
+            "cta_text": "VIEW WEAPON",
+            "cta_link": "",
+            "accent_color": "#00ff5f"
+          }
+        },
+        "banner_qxNVaz": {
+          "type": "banner",
+          "settings": {
+            "background_image": "shopify://shop_images/now_remove_the_model.._just_202606021213.jpg",
+            "featured_image": "shopify://shop_images/remove_the_text_2K_202606021209.png",
+            "card_thumbnail": "shopify://shop_images/only_need_the_weapon_img_202606021215.jpg",
+            "title": "M416",
+            "subtitle": "Assault Rifle | Long Barrel | Range: 3AM | Kinetic Accelerator",
+            "cta_text": "VIEW WEAPON",
+            "cta_link": "",
+            "accent_color": "#00ff5f"
+          }
+        }
+      },
+      "block_order": [
+        "banner_z4pKhD",
+        "banner_TfyMrV",
+        "banner_qwA8Lw",
+        "banner_qxNVaz"
+      ],
+      "name": "Weapon Showcase Hero",
+      "settings": {
+        "hero_height": "90vh",
+        "content_width": "1800px",
+        "accent_color": "#00ff5f",
+        "overlay_opacity": 55,
+        "animation_speed": 700
+      }
+    },
+    "armory_product_cards_c9VKWf": {
+      "type": "armory-product-cards",
+      "name": "Armory Product Cards",
+      "settings": {
+        "collection": "frontpage",
+        "products_limit": 8,
+        "show_header": true,
+        "badge_text": "ACTIVE INVENTORY",
+        "title": "SELECT YOUR WEAPON",
+        "title_accent": "WEAPON",
+        "subtitle": "Advanced weapons grade armory",
+        "columns": "2",
+        "card_gap": 16,
+        "section_padding": 80,
+        "content_width": "1800px",
+        "accent_color": "#00ff5f",
+        "section_bg": "#060d1a"
+      }
+    },
+    "tactical_features_8UpCXz": {
+      "type": "tactical-features",
+      "blocks": {
+        "feature_JNdJJq": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "tag": "PROTECTION",
+            "title": "Military-Grade Build",
+            "desc": "Aerospace alloys tested beyond standard military specifications for field reliability.",
+            "stat_val": "MIL-SPEC",
+            "stat_label": "CERTIFIED",
+            "accent_override": ""
+          }
+        },
+        "feature_QF6eiB": {
+          "type": "feature",
+          "settings": {
+            "icon": "bolt",
+            "tag": "PERFORMANCE",
+            "title": "Plasma-Core Technology",
+            "desc": "Next-gen plasma acceleration delivers unmatched velocity and kinetic energy.",
+            "stat_val": "3.2×",
+            "stat_label": "POWER",
+            "accent_override": ""
+          }
+        },
+        "feature_VkP7xz": {
+          "type": "feature",
+          "settings": {
+            "icon": "target",
+            "tag": "PRECISION",
+            "title": "AI Targeting System",
+            "desc": "Integrated holographic AI assists with target acquisition at any range.",
+            "stat_val": "99%",
+            "stat_label": "ACCURACY",
+            "accent_override": ""
+          }
+        },
+        "feature_7ffxk6": {
+          "type": "feature",
+          "settings": {
+            "icon": "cpu",
+            "tag": "TECHNOLOGY",
+            "title": "Neural Interface Ready",
+            "desc": "Compatible with all gen-4 neural control interfaces for operator sync.",
+            "stat_val": "GEN-4",
+            "stat_label": "INTERFACE",
+            "accent_override": ""
+          }
+        },
+        "trust_dtmTLE": {
+          "type": "trust",
+          "settings": {
+            "icon": "truck",
+            "title": "Free Shipping",
+            "desc": "Secure military-grade packaging. Free worldwide on orders over $100.",
+            "tag": "WORLDWIDE"
+          }
+        },
+        "trust_fWc6Ua": {
+          "type": "trust",
+          "settings": {
+            "icon": "shield",
+            "title": "Lifetime Warranty",
+            "desc": "Every weapon backed by our lifetime performance guarantee.",
+            "tag": "GUARANTEED"
+          }
+        },
+        "trust_TLh4bA": {
+          "type": "trust",
+          "settings": {
+            "icon": "refresh",
+            "title": "30-Day Returns",
+            "desc": "Not satisfied? Return any weapon within 30 days. No questions asked.",
+            "tag": "HASSLE-FREE"
+          }
+        },
+        "trust_LYzrmB": {
+          "type": "trust",
+          "settings": {
+            "icon": "headphones",
+            "title": "24/7 Support",
+            "desc": "Elite tactical support team on standby around the clock.",
+            "tag": "ALWAYS ON"
+          }
+        }
+      },
+      "block_order": [
+        "feature_JNdJJq",
+        "feature_QF6eiB",
+        "feature_VkP7xz",
+        "feature_7ffxk6",
+        "trust_dtmTLE",
+        "trust_fWc6Ua",
+        "trust_TLh4bA",
+        "trust_LYzrmB"
+      ],
+      "name": "Armory Tactical Features",
+      "settings": {
+        "badge": "WHY CHOOSE US",
+        "title": "TACTICAL ADVANTAGE",
+        "title_accent": "ADVANTAGE",
+        "subtitle": "Every weapon engineered to spec. Every operator equipped for dominance. This is the armory of the future.",
+        "showcase_image": "shopify://shop_images/Ultra_realistic_futuristic_tactical_weapon_202606021609.jpg",
+        "showcase_label": "",
+        "show_metrics": true,
+        "metric_1_val": "99%",
+        "metric_1_label": "ACCURACY",
+        "metric_2_val": "24H",
+        "metric_2_label": "DISPATCH",
+        "metric_3_val": "AAA",
+        "metric_3_label": "GRADE",
+        "cta_primary_text": "EXPLORE ARSENAL",
+        "cta_primary_link": "",
+        "cta_secondary_text": "VIEW COLLECTION",
+        "cta_secondary_link": "",
+        "accent_color": "#00ff5f",
+        "bg_color": "#f0f4f8",
+        "section_padding": 80,
+        "content_width": "1800px"
+      }
+    },
+    "classified_intel_QpaFVm": {
+      "type": "classified-intel",
+      "disabled": true,
+      "name": "Classified Intel",
+      "settings": {
+        "badge": "CLASSIFIED INTEL",
+        "title": "WAR ROOM INTEL FEED",
+        "title_accent": "INTEL",
+        "subtitle": "Live data stream from the armory database. All intel is classified — operator eyes only.",
+        "row1_text": "SR-10 STORM | HR-7 HYDRA | AR-22 BANSHEE | PDW-9 SPECTER | MR-6 SENTINEL | SG-12 REAPER | DMR-14 HUNTER | SMG-9 VIPER",
+        "row1_color": "white",
+        "row1_sep": "diamond",
+        "row1_size": 32,
+        "row1_speed": 25,
+        "row2_text": "PLASMA CORE TECH | KINETIC ACCELERATOR | HOLOGRAPHIC SIGHT | DUAL MAG SYSTEM | NEURAL INTERFACE | MIL-SPEC CERTIFIED | AI TARGETING | SILENCED BARREL",
+        "row2_color": "cyan",
+        "row2_sep": "slash",
+        "row2_size": 18,
+        "row2_speed": 35,
+        "row3_text": "FREE SHIPPING OVER $100 | AAA GRADE ARSENAL | 30-DAY RETURNS | LIFETIME WARRANTY | 50K+ OPERATORS | ENCRYPTED CHECKOUT | 24/7 SUPPORT | WORLDWIDE DELIVERY",
+        "row3_color": "green",
+        "row3_sep": "dot",
+        "row3_size": 11,
+        "row3_speed": 45,
+        "show_row4": true,
+        "row4_text": "$2,450 SR-10 STORM | $2,950 HR-7 HYDRA | $1,890 AR-22 BANSHEE | $1,250 SG-12 REAPER | $1,720 DMR-14 HUNTER | $950 SMG-9 VIPER | $2,150 MR-6 SENTINEL | $650 PX-4 PHANTOM",
+        "row4_color": "gold",
+        "row4_size": 14,
+        "row4_speed": 30,
+        "show_live_row": true,
+        "live_collection": "",
+        "show_terminal": true,
+        "terminal_line_1": "STATUS: ALL WEAPONS OPERATIONAL — DEPLOY READY",
+        "terminal_line_2": "ALERT: LIMITED STOCK ON PLASMA SERIES — ACT NOW",
+        "terminal_line_3": "FREE SHIPPING ACTIVE — ORDERS OVER $100 QUALIFY",
+        "show_stats": true,
+        "stat_1_val": "50K+",
+        "stat_1_label": "OPERATORS",
+        "stat_2_val": "2K+",
+        "stat_2_label": "WEAPONS",
+        "stat_3_val": "99%",
+        "stat_3_label": "SATISFACTION",
+        "stat_4_val": "24H",
+        "stat_4_label": "DISPATCH",
+        "accent_color": "#00d4ff",
+        "bg_color": "#040a13",
+        "section_padding": 80,
+        "row_gap": 8,
+        "row_padding": 16
+      }
+    }
+  },
+  "order": [
+    "custom_banner_NQNzGg",
+    "armory_product_cards_c9VKWf",
+    "tactical_features_8UpCXz",
+    "classified_intel_QpaFVm"
+  ]
+}
